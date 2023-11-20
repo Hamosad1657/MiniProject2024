@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Class for managing persistent alerts to be sent over NetworkTables. */
 public class Alert {
-    private static Map<String, SendableAlerts> groups =
+    private static final Map<String, SendableAlerts> groups =
             new HashMap<>();
 
     private final AlertType type;
@@ -93,6 +93,32 @@ public class Alert {
         this.text = text;
     }
 
+    /**
+     * Represents an alert's level of urgency.
+     */
+    public enum AlertType {
+        /**
+         * High priority alert - displayed first on the dashboard with a red "X" symbol. Use this type
+         * for problems which will seriously affect the robot's functionality and thus require immediate
+         * attention.
+         */
+        ERROR,
+
+        /**
+         * Medium priority alert - displayed second on the dashboard with a yellow "!" symbol. Use this
+         * type for problems which could affect the robot's functionality but do not necessarily require
+         * immediate attention.
+         */
+        WARNING,
+
+        /**
+         * Low priority alert - displayed last on the dashboard with a green "i" symbol. Use this type
+         * for problems which are unlikely to affect the robot's functionality, or any other alerts
+         * which do not fall under "ERROR" or "WARNING".
+         */
+        INFO
+    }
+
     private static class SendableAlerts implements Sendable {
         public final List<Alert> alerts = new ArrayList<>();
 
@@ -114,32 +140,6 @@ public class Alert {
             builder.addStringArrayProperty("info", () -> getStrings(AlertType.INFO),
                     null);
         }
-    }
-
-    /**
-     * Represents an alert's level of urgency.
-     */
-    public static enum AlertType {
-        /**
-         * High priority alert - displayed first on the dashboard with a red "X" symbol. Use this type
-         * for problems which will seriously affect the robot's functionality and thus require immediate
-         * attention.
-         */
-        ERROR,
-
-        /**
-         * Medium priority alert - displayed second on the dashboard with a yellow "!" symbol. Use this
-         * type for problems which could affect the robot's functionality but do not necessarily require
-         * immediate attention.
-         */
-        WARNING,
-
-        /**
-         * Low priority alert - displayed last on the dashboard with a green "i" symbol. Use this type
-         * for problems which are unlikely to affect the robot's functionality, or any other alerts
-         * which do not fall under "ERROR" or "WARNING".
-         */
-        INFO
     }
 }
 

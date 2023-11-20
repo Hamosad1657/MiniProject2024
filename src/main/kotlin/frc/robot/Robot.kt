@@ -1,5 +1,6 @@
 package frc.robot
 
+import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
@@ -19,6 +20,9 @@ object Robot : TimedRobot()
 
     private var autonomousCommand: Command? = null
 
+    fun print(value: Any) {
+        DriverStation.reportWarning(value.toString(), false)
+    }
 
     override fun robotInit()
     {
