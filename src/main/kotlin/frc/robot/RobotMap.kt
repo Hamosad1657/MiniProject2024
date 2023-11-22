@@ -18,5 +18,6 @@ object RobotMap {
 	object Hood {
 		const val MOTOR_ID = 0
 		const val LIMIT_CHANNEL = 0
+		const val ENCODER_ID = 0
 	}
 }
