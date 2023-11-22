@@ -5,6 +5,7 @@ import com.ctre.phoenix.sensors.CANCoder
 import com.hamosad1657.lib.motors.HaTalonFX
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.RunCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -17,10 +18,15 @@ object TurretSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Turret.HATALONFX_ID)
 	private val encoder = CANCoder(RobotMap.Turret.CANCODER_ID)
 
+	private val cwLimit = DigitalInput(RobotMap.Turret.CW_LIMIT_SWITCH_CHANNEL)
+	private val ccwLimit = DigitalInput(RobotMap.Turret.CCW_LIMIT_SWITCH_CHANNEL)
+
 	private val turretController = PIDController(kP, kI, kD)
 
 	init {
 		encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
+		motor.forwardLimit = { cwLimit.get() }
+		motor.reverseLimit = { ccwLimit.get() }
 	}
 
 	fun getToAngleCommand(desiredAngleSupplier: () -> Rotation2d): Command {
