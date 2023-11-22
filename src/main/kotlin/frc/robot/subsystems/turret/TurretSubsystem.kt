@@ -30,7 +30,11 @@ object TurretSubsystem : SubsystemBase() {
 	}
 
 	fun getToAngleCommand(desiredAngleSupplier: () -> Rotation2d): Command {
-		val output = turretController.calculate(encoder.position, desiredAngleSupplier().degrees)
+		val output = turretController.calculate(getAngle().degrees, desiredAngleSupplier().degrees)
 		return RunCommand({motor.set(output)}).finallyDo { motor.set(0.0) }
+	}
+
+	fun getAngle(): Rotation2d {
+		return Rotation2d(encoder.position * TurretConstants.gearRatioEncoderToTurret)
 	}
 }

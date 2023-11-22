@@ -15,5 +15,8 @@ object RobotMap {
 		const val CANCODER2_ID = 0
 	}
 
-	object Hood
+	object Hood {
+		const val MOTOR_ID = 0
+		const val LIMIT_CHANNEL = 0
+	}
 }
