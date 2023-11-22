@@ -17,4 +17,7 @@ object ShooterSubsystem: Subsystem {
 	fun shootBallsCommand(): Command {
 	return InstantCommand({RunCommand({motor1.set(ShooterConstants.OUTPUT)}, this)})
 	}
+	init {
+		motor2.follow(motor1)
+	}
 }
