@@ -23,4 +23,8 @@ object RobotMap {
 	object Loader {
 		const val MOTOR_ID = 0
 	}
+
+	object Intake {
+		const val MOTOR_ID = 0
+	}
 }
