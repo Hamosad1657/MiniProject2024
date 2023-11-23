@@ -19,4 +19,8 @@ object RobotMap {
 	object Conveyor {
 		const val MOTOR_ID = 0
 	}
+
+	object Loader {
+		const val MOTOR_ID = 0
+	}
 }
