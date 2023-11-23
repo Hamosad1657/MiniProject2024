@@ -16,7 +16,7 @@ object ConveyorSubsystem : SubsystemBase() {
 		motor.config_kD(0, ConveyorConstants.kD)
 	}
 
-	fun setConveyorSpeedCommand(ballsPerSecs: () -> Double): Command {
+	fun runConveyorCommand(ballsPerSecs: () -> Double): Command {
 
 		val setpoint = ConveyorConstants.CONVEYOR_VELOCITY_CONVERSION * ballsPerSecs()
 
