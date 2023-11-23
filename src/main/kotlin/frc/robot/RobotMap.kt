@@ -9,10 +9,7 @@ object RobotMap {
 	}
 
 	object Shooter {
-		const val HATALONSRX_ID1  = 0
-		const val HATALONSRX_ID2 = 0
-		const val CANCODER_ID1 = 0
-		const val CANCODER2_ID = 0
+		const val HATALONFX_ID = 0
 	}
 
 	object Hood {
