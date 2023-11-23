@@ -14,6 +14,6 @@ object LoaderSubsystem : SubsystemBase() {
 		return RunCommand({
 			val setpoint = LoaderConstants.CONVEYOR_VELOCITY_CONVERSION * ballsPerSecs()
 			motor.set(ControlMode.Velocity, setpoint)
-		})
+		}, this)
 	}
 }

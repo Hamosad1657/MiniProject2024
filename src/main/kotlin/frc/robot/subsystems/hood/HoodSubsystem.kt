@@ -30,7 +30,7 @@ object HoodSubsystem : SubsystemBase() {
 		return RunCommand({
 			val output = hoodController.calculate(hoodAngle.degrees, desiredAngleSupplier().degrees)
 			motor.set(output)
-		}).finallyDo { motor.set(0.0) }
+		}, this).finallyDo { motor.set(0.0) }
 	}
 
 
