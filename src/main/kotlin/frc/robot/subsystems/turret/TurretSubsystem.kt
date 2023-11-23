@@ -14,7 +14,7 @@ import frc.robot.subsystems.turret.TurretConstants.kI
 import frc.robot.subsystems.turret.TurretConstants.kP
 
 object TurretSubsystem : SubsystemBase() {
-	private val motor = HaTalonFX(RobotMap.Turret.HATALONFX_ID)
+	private val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID)
 	private val encoder = CANCoder(RobotMap.Turret.CANCODER_ID)
 
 	private val turretController = PIDController(kP, kI, kD)

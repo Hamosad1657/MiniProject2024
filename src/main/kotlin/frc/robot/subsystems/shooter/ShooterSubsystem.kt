@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
 
 object ShooterSubsystem : SubsystemBase() {
-	private val motor = HaTalonFX(RobotMap.Shooter.HATALONFX_ID)
+	private val motor = HaTalonFX(RobotMap.Shooter.MOTOR_ID)
 
 	init {
 		motor.config_kP(0, ShooterConstants.kP)
