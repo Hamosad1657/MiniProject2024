@@ -23,6 +23,10 @@ object TurretSubsystem : SubsystemBase() {
 		encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
 		motor.forwardLimit = { angle.degrees >= TurretConstants.MAX_ANGLE }
 		motor.reverseLimit = { angle.degrees <= TurretConstants.MIN_ANGLE }
+
+		motor.config_kP(0, TurretConstants.kP)
+		motor.config_kI(0, TurretConstants.kI)
+		motor.config_kD(0, TurretConstants.kD)
 	}
 
 	fun getToAngleCommand(desiredAngleSupplier: () -> Rotation2d): Command {
