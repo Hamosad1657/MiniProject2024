@@ -11,6 +11,11 @@ import frc.robot.RobotMap
 object ShooterSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Shooter.HATALONFX_ID)
 
+	init {
+		motor.config_kP(0, ShooterConstants.kP)
+		motor.config_kI(0, ShooterConstants.kI)
+		motor.config_kD(0, ShooterConstants.kD)
+	}
 
 	fun shootBallsCommand(angularVelocity: AngularVelocity): Command {
 		return RunCommand({ motor.set(ControlMode.Velocity, angularVelocity.degPs) }, this)
