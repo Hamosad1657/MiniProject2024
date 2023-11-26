@@ -12,10 +12,18 @@ object IntakeSubsystem : SubsystemBase() {
 
 
 	fun collectCommand(): Command {
-		return RunCommand({ motor.set(IntakeConstants.MOTOR_OUTPUT) }, this)
+		return RunCommand({ collect() }, this)
+	}
+
+	private fun collect() {
+		motor.set(IntakeConstants.MOTOR_OUTPUT)
 	}
 
 	fun stopIntakeCommand(): Command {
-		return InstantCommand({ motor.set(0.0) }, this)
+		return InstantCommand({ stopIntake() }, this)
+	}
+
+	fun stopIntake() {
+		motor.set(0.0)
 	}
 }

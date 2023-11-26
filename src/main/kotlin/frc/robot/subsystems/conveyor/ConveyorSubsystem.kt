@@ -17,9 +17,12 @@ object ConveyorSubsystem : SubsystemBase() {
 	}
 
 	fun runConveyorCommand(ballsPerSecs: () -> Double): Command {
-		return RunCommand({
-			val setpoint = ConveyorConstants.CONVEYOR_VELOCITY_CONVERSION * ballsPerSecs()
-			motor.set(ControlMode.Velocity, setpoint)
-		}, this)
+		return RunCommand({ runConveyor(ballsPerSecs()) }, this)
+
+	}
+
+	fun runConveyor(ballsPerSecs: Double) {
+		val setpoint = ConveyorConstants.CONVEYOR_VELOCITY_CONVERSION * ballsPerSecs
+		motor.set(ControlMode.Velocity, setpoint)
 	}
 }
