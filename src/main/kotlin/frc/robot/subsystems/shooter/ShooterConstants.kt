@@ -1,10 +1,8 @@
 package frc.robot.subsystems.shooter
 
-object ShooterConstants {
-	const val OUTPUT = 0.0
-	const val TIMEOUT_MS = 0
+import com.hamosad1657.lib.math.PIDGains
 
-	const val kP = 0.0
-	const val kI = 0.0
-	const val kD = 0.0
+object ShooterConstants {
+	val PID_GAINS = PIDGains(0.0, 0.0, 0.0)
+
 }
