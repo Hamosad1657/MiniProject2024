@@ -1,6 +1,7 @@
 package frc.robot.subsystems.hood
 
 import com.ctre.phoenix.motorcontrol.ControlMode
+import com.ctre.phoenix.motorcontrol.FeedbackDevice
 import com.ctre.phoenix.sensors.CANCoder
 import com.hamosad1657.lib.motors.HaTalonFX
 import edu.wpi.first.math.geometry.Rotation2d
@@ -16,11 +17,11 @@ object HoodSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Hood.MOTOR_ID)
 	private val reverseLimitSwitch = DigitalInput(RobotMap.Hood.LIMIT_CHANNEL)
 
-	private val hoodAngleDeg: Double
-		get() = encoder.position * GEAR_RATIO_ENCODER_TO_HOOD
-
 	init {
-		motor.forwardLimit = { hoodAngleDeg >= HoodConstants.MAX_HOOD_ANGLE }
+		motor.configRemoteFeedbackFilter(encoder, 0)
+		motor.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0)
+
+		motor.forwardLimit = { angle.degrees >= HoodConstants.MAX_HOOD_ANGLE_DEG }
 		motor.reverseLimit = { reverseLimitSwitch.get() }
 
 		motor.config_kP(0, HoodConstants.PID_GAINS.kP)
