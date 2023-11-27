@@ -1,9 +1,9 @@
 package frc.robot.subsystems.conveyor
 
+import com.hamosad1657.lib.math.PIDGains
+
 object ConveyorConstants {
 	const val CONVEYOR_VELOCITY_CONVERSION = 0.0
 
-	const val kP = 0.0
-	const val kI = 0.0
-	const val kD = 0.0
+	val PID_GAINS = PIDGains(0.0, 0.0, 0.0)
 }
