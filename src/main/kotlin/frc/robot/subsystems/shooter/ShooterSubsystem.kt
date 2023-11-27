@@ -11,9 +11,9 @@ object ShooterSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Shooter.MOTOR_ID)
 
 	init {
-		motor.config_kP(0, ShooterConstants.kP)
-		motor.config_kI(0, ShooterConstants.kI)
-		motor.config_kD(0, ShooterConstants.kD)
+		motor.config_kP(0, ShooterConstants.PID_GAINS.kP)
+		motor.config_kI(0, ShooterConstants.PID_GAINS.kI)
+		motor.config_kD(0, ShooterConstants.PID_GAINS.kD)
 	}
 
 	fun shootBallsCommand(angularVelocity: AngularVelocity): Command {
@@ -23,4 +23,7 @@ object ShooterSubsystem : SubsystemBase() {
 	private fun set(angularVelocity: AngularVelocity) {
 		motor.set(ControlMode.Position, angularVelocity.degPs)
 	}
+
+	val angularVelocity: AngularVelocity
+		get() = AngularVelocity.fromFalconTicksPer100ms(motor.selectedSensorVelocity)
 }
