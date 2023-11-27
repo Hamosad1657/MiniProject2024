@@ -24,6 +24,9 @@ object ShooterSubsystem : SubsystemBase() {
 		motor.set(ControlMode.Position, angularVelocity.degPs)
 	}
 
+	val ballsPerSecs: Double
+		get() = angularVelocity.rps * ShooterConstants.SHOOTER_BALLS_PER_ROTATION
+
 	val angularVelocity: AngularVelocity
 		get() = AngularVelocity.fromFalconTicksPer100ms(motor.selectedSensorVelocity)
 }
