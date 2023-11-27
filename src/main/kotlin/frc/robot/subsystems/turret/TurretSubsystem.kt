@@ -1,8 +1,10 @@
 package frc.robot.subsystems.turret
 
+import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.sensors.AbsoluteSensorRange
 import com.ctre.phoenix.sensors.CANCoder
 import com.hamosad1657.lib.motors.HaTalonFX
+import edu.wpi.first.math.MathUtil
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -23,20 +25,13 @@ object TurretSubsystem : SubsystemBase() {
 	}
 
 	fun getToAngleCommand(desiredAngleSupplier: () -> Rotation2d): Command {
-		return run { getToAngle(desiredAngleSupplier) }.finallyDo { motor.set(0.0) }
+		return run { getToAngle(desiredAngleSupplier()) }.finallyDo { motor.set(0.0) }
 	}
 
-	fun getToAngle(desiredAngleSupplier: Rotation2d) {
-		if (desiredAngleSupplier.invoke().degrees in 0.0..360.0) {
-			val output = turretController.calculate(angle.degrees, desiredAngleSupplier().degrees)
-			return motor.set(output)
-		} else if (desiredAngleSupplier.invoke().degrees > 360.0) {
-			val output = turretController
-				.calculate((angle.degrees + 360) % 360, desiredAngleSupplier().degrees)
-			return motor.set(output)
-		}
+	private fun getToAngle(desiredAngle: Rotation2d) {
+		motor.set(ControlMode.Position, MathUtil.inputModulus(desiredAngle.degrees, 0.0, 360.0))
 	}
 
 	val angle: Rotation2d
-		get() = Rotation2d.fromDegrees(encoder.position * TurretConstants.gearRatioEncoderToTurret)
+		get() = Rotation2d.fromDegrees(encoder.position * TurretConstants.GEAR_RATIO_ENCODER_TO_TURRET)
 }
