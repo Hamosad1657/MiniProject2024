@@ -4,75 +4,77 @@ import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.sensors.AbsoluteSensorRange
 import com.ctre.phoenix.sensors.CANCoder
 import com.hamosad1657.lib.motors.HaTalonFX
-import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.math.MathUtil
-import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
+import frc.robot.subsystems.turret.TurretConstants.CAMERA_MID_WIDTH
+import frc.robot.subsystems.turret.TurretConstants.MAX_ANGLE
+import frc.robot.subsystems.turret.TurretConstants.MIN_ANGLE
+import frc.robot.subsystems.turret.TurretConstants.TOLERANCE_DEGREES
 import org.photonvision.targeting.PhotonTrackedTarget
 import kotlin.math.abs
-import kotlin.math.absoluteValue
 
 object TurretSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID)
 	private val encoder = CANCoder(RobotMap.Turret.CANCODER_ID)
 
+	private val currentAngle get() = encoder.position * TurretConstants.GEAR_RATIO_ENCODER_TO_TURRET
+	private val farthestTurnAngle get() = if (currentAngle >= 180) MIN_ANGLE else MAX_ANGLE
 
 	init {
 		encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
-		motor.forwardLimit = { angle.degrees >= TurretConstants.MAX_ANGLE }
-		motor.reverseLimit = { angle.degrees <= TurretConstants.MIN_ANGLE }
+		motor.forwardLimit = { currentAngle >= MAX_ANGLE }
+		motor.reverseLimit = { currentAngle <= MIN_ANGLE }
 
 		motor.config_kP(0, TurretConstants.kP)
 		motor.config_kI(0, TurretConstants.kI)
 		motor.config_kD(0, TurretConstants.kD)
 	}
 
-	fun getToAngleCommand(desiredAngleSupplier: () -> Rotation2d): Command {
-		return run { getToAngle(desiredAngleSupplier()) }.finallyDo { motor.set(0.0) }
+	private fun getToAngle(desiredAngle: Double) {
+		motor.set(ControlMode.Position, MathUtil.inputModulus(desiredAngle, 0.0, 360.0))
 	}
 
-	private fun getToAngle(desiredAngle: Rotation2d) {
-		motor.set(ControlMode.Position, MathUtil.inputModulus(desiredAngle.degrees, 0.0, 360.0))
-	}
-
-
-	val angle: Rotation2d
-		get() = Rotation2d.fromDegrees(encoder.position * TurretConstants.GEAR_RATIO_ENCODER_TO_TURRET)
-
-
-	// Command that takes a supplier of PhotonTrackedTarget and causes the turret to rotate towards the target.
-	// If there is no target, the turret simply stops moving.
-
-	fun turnTowardsTargetCommand(targetSupplier: () -> PhotonTrackedTarget?): Command {
-	return run {
-		val target = targetSupplier()
-		if(target != null) {
-			val turretToTargetAngle = target.yaw.degrees
-			getToAngle(turretToTargetAngle + angle)
-		}
-		}.finallyDo { motor.set(0.0) }
-	}
-
-	fun getToAngleAndEndCommand(desiredAngleSupplier: () -> Rotation2d, tolerance: Rotation2d): Command {
-		return getToAngleCommand { desiredAngleSupplier() }.until {
-			val error = desiredAngleSupplier().degrees - angle.degrees
-			abs(error) >= tolerance.degrees
-		}
-	}
-
-	fun fullTurnCommand(): Command {
-		var setpoint = 0.0
-		if (angle.degrees >= 180.0) {
-			setpoint = 0.0
-		}
-		else {
-			setpoint = 360.0
-		}
+	private fun getToAngleCommand(desiredAngle: Double): Command {
 		return run {
-			getToAngleAndEndCommand({setpoint.degrees}, TurretConstants.TOLERANCE.degrees)
+			getToAngle(desiredAngle)
+		}.until {
+			val error = desiredAngle - currentAngle
+			abs(error) <= TOLERANCE_DEGREES
+		}.finallyDo {
+			motor.stopMotor()
 		}
 	}
 
+	fun fullTurnCommand(): Command = getToAngleCommand(farthestTurnAngle)
+
+	fun trackTargetCommand(trackedTargetSupplier: () -> PhotonTrackedTarget?): Command {
+		var currentTurnAngle: Double? = null
+		var lastTargetLeftCornerX: Double? = null
+
+		return run {
+			val target = trackedTargetSupplier()
+			if (target == null) {
+				if (currentTurnAngle == null) {
+					currentTurnAngle =
+						if (lastTargetLeftCornerX != null) guessTurnAngleByTargetCorner(lastTargetLeftCornerX!!)
+						else farthestTurnAngle
+				}
+
+				getToAngle(currentTurnAngle!!)
+			} else {
+				lastTargetLeftCornerX = target.detectedCorners.minBy { it.x }.x
+				currentTurnAngle = null
+
+				val desiredAngle = currentAngle - target.yaw
+				getToAngle(desiredAngle)
+			}
+		}.finallyDo {
+			motor.stopMotor()
+		}
+	}
+
+	private fun guessTurnAngleByTargetCorner(cornerX: Double) =
+		if (cornerX > CAMERA_MID_WIDTH) MAX_ANGLE else MIN_ANGLE
 }
