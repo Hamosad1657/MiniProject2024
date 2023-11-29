@@ -48,7 +48,10 @@ object TurretSubsystem : SubsystemBase() {
 	fun turnTowardsTargetCommand(targetSupplier: () -> PhotonTrackedTarget?): Command {
 	return run {
 		val target = targetSupplier()
-		if(target != null) {getToAngle(target.yaw.degrees)}
+		if(target != null) {
+			val turretToTargetAngle = target.yaw.degrees
+			getToAngle(turretToTargetAngle + angle)
+		}
 		}.finallyDo { motor.set(0.0) }
 	}
 
