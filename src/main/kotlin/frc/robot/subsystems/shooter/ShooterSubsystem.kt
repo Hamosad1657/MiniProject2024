@@ -17,7 +17,7 @@ object ShooterSubsystem : SubsystemBase() {
 	}
 
 	fun shootBallsCommand(angularVelocity: AngularVelocity): Command {
-		return run { set(angularVelocity) }.finallyDo { motor.set(0.0) }
+		return run { set(angularVelocity) }.finallyDo { motor.stopMotor() }
 	}
 
 	fun shootBallsCommand(ballsPerSec: Double): Command {

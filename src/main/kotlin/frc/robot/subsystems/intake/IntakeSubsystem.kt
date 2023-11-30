@@ -24,6 +24,6 @@ object IntakeSubsystem : SubsystemBase() {
 	}
 
 	fun stopIntake() {
-		motor.set(0.0)
+		motor.stopMotor()
 	}
 }
