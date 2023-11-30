@@ -7,9 +7,12 @@ object TurretConstants {
 
 	const val TOLERANCE_DEGREES = 0.0
 
-	const val MIN_ANGLE = 0.0
-	const val MAX_ANGLE = 350.0
+	const val MIN_ANGLE_DEG = 0.0
+	const val MAX_ANGLE_DEG = 350.0
 
+	/**
+	 * In pixels
+	 */
 	const val CAMERA_MID_WIDTH = 300
 
 	/**

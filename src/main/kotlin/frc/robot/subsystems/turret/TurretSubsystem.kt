@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
 import frc.robot.subsystems.turret.TurretConstants.CAMERA_MID_WIDTH
-import frc.robot.subsystems.turret.TurretConstants.MAX_ANGLE
-import frc.robot.subsystems.turret.TurretConstants.MIN_ANGLE
+import frc.robot.subsystems.turret.TurretConstants.MAX_ANGLE_DEG
+import frc.robot.subsystems.turret.TurretConstants.MIN_ANGLE_DEG
 import frc.robot.subsystems.turret.TurretConstants.TOLERANCE_DEGREES
 import org.photonvision.targeting.PhotonTrackedTarget
 import kotlin.math.abs
@@ -20,12 +20,12 @@ object TurretSubsystem : SubsystemBase() {
 	private val encoder = CANCoder(RobotMap.Turret.CANCODER_ID)
 
 	private val currentAngle get() = encoder.position * TurretConstants.GEAR_RATIO_ENCODER_TO_TURRET
-	private val farthestTurnAngle get() = if (currentAngle >= 180) MIN_ANGLE else MAX_ANGLE
+	private val farthestTurnAngle get() = if (currentAngle >= 180) MIN_ANGLE_DEG else MAX_ANGLE_DEG
 
 	init {
 		encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
-		motor.forwardLimit = { currentAngle >= MAX_ANGLE }
-		motor.reverseLimit = { currentAngle <= MIN_ANGLE }
+		motor.forwardLimit = { currentAngle >= MAX_ANGLE_DEG }
+		motor.reverseLimit = { currentAngle <= MIN_ANGLE_DEG }
 
 		motor.config_kP(0, TurretConstants.kP)
 		motor.config_kI(0, TurretConstants.kI)
@@ -36,7 +36,7 @@ object TurretSubsystem : SubsystemBase() {
 		motor.set(ControlMode.Position, MathUtil.inputModulus(desiredAngle, 0.0, 360.0))
 	}
 
-	private fun getToAngleCommand(desiredAngle: Double): Command {
+	fun getToAngleCommand(desiredAngle: Double): Command {
 		return run {
 			getToAngle(desiredAngle)
 		}.until {
@@ -76,5 +76,5 @@ object TurretSubsystem : SubsystemBase() {
 	}
 
 	private fun guessTurnAngleByTargetCorner(cornerX: Double) =
-		if (cornerX > CAMERA_MID_WIDTH) MAX_ANGLE else MIN_ANGLE
+		if (cornerX > CAMERA_MID_WIDTH) MAX_ANGLE_DEG else MIN_ANGLE_DEG
 }
