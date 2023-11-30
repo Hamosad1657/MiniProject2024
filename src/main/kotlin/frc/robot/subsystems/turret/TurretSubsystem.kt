@@ -36,15 +36,23 @@ object TurretSubsystem : SubsystemBase() {
 		motor.config_kD(0, TurretConstants.kD)
 	}
 
-	private fun getToAngle(desiredAngle: Double) {
-		motor.set(ControlMode.Position, MathUtil.inputModulus(desiredAngle, 0.0, 360.0))
+	/**
+	 * @param desiredAngleDeg May be any value, is not required to be in 0 to 360
+	 */
+	private fun getToAngle(desiredAngleDeg: Double) {
+		motor.set(ControlMode.Position, MathUtil.inputModulus(desiredAngleDeg, 0.0, 360.0))
 	}
 
-	fun getToAngleCommand(desiredAngle: Double): Command {
+	/**
+	 * @param desiredAngleDeg May be any value, is not required to be in 0 to 360
+	 */
+	fun getToAngleCommand(desiredAngleDeg: Double): Command {
+		val angle = MathUtil.inputModulus(desiredAngleDeg, 0.0, 360.0)
+
 		return run {
-			getToAngle(desiredAngle)
+			getToAngle(angle)
 		}.until {
-			val error = desiredAngle - currentAngleDeg
+			val error = angle - currentAngleDeg
 			abs(error) <= TOLERANCE_DEGREES
 		}.finallyDo {
 			motor.stopMotor()
