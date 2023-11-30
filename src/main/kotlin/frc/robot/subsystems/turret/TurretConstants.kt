@@ -10,6 +10,8 @@ object TurretConstants {
 	const val MIN_ANGLE_DEG = 0.0
 	const val MAX_ANGLE_DEG = 350.0
 
+	const val SCAN_FOR_TAGS_ROTATION_OUTPUT = 0.0
+
 	/**
 	 * In pixels
 	 */
@@ -21,4 +23,6 @@ object TurretConstants {
 	 */
 	const val GEAR_RATIO_ENCODER_TO_TURRET = 0.0
 	const val TELEOP_ANGLE_MULTIPLIER = 0.0
+
+	const val TAG_DETECTION_TIME_SEC = 0.5
 }

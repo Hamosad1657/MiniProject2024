@@ -5,12 +5,14 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange
 import com.ctre.phoenix.sensors.CANCoder
 import com.hamosad1657.lib.motors.HaTalonFX
 import edu.wpi.first.math.MathUtil
+import edu.wpi.first.math.filter.Debouncer
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
 import frc.robot.subsystems.turret.TurretConstants.CAMERA_MID_WIDTH
 import frc.robot.subsystems.turret.TurretConstants.MAX_ANGLE_DEG
 import frc.robot.subsystems.turret.TurretConstants.MIN_ANGLE_DEG
+import frc.robot.subsystems.turret.TurretConstants.TAG_DETECTION_TIME_SEC
 import frc.robot.subsystems.turret.TurretConstants.TOLERANCE_DEGREES
 import org.photonvision.targeting.PhotonTrackedTarget
 import kotlin.math.abs
@@ -22,6 +24,8 @@ object TurretSubsystem : SubsystemBase() {
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
 	private val currentAngleDeg get() = encoder.position * TurretConstants.GEAR_RATIO_ENCODER_TO_TURRET
 	private val farthestTurnAngle get() = if (currentAngleDeg >= 180) MIN_ANGLE_DEG else MAX_ANGLE_DEG
+
+	private val tagDetectionDebouncer = Debouncer(TAG_DETECTION_TIME_SEC)
 
 	init {
 		encoder.configSensorDirection(false) // TODO: verify Turret CANCoder is CCW positive
@@ -96,5 +100,29 @@ object TurretSubsystem : SubsystemBase() {
 				(currentAngleDeg + cwRotationSupplier() - ccwRotationSupplier()) * TurretConstants.TELEOP_ANGLE_MULTIPLIER
 			getToAngle(setpoint)
 		}
+	}
+
+	/**
+	 * Slowly turn to one direction until limit is pressed,
+	 * slowly turn to the other direction until limit is pressed
+	 * end if saw tag of specified ID for more than [TurretConstants.TAG_DETECTION_TIME_SEC]
+	 * or if made two turns and didn't see the tag
+	 */
+	fun searchForTagCommand(tagID: Int, trackedTargetSupplier: () -> PhotonTrackedTarget?): Command {
+		return fullTurnCommand().andThen(fullTurnCommand()).until { seeingTag(tagID, trackedTargetSupplier()) }
+	}
+
+	/**
+	 * Return if saw tag of specified ID for over [TurretConstants.TAG_DETECTION_TIME_SEC] seconds.
+	 */
+	private fun seeingTag(tagID: Int, trackedTarget: PhotonTrackedTarget?): Boolean {
+		var seeingTheTagNow = false;
+
+		if (trackedTarget != null) {
+			if (trackedTarget.fiducialId == tagID) {
+				seeingTheTagNow = true;
+			}
+		}
+		return tagDetectionDebouncer.calculate(seeingTheTagNow)
 	}
 }
