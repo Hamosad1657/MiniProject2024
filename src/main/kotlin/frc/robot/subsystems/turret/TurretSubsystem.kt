@@ -77,4 +77,12 @@ object TurretSubsystem : SubsystemBase() {
 
 	private fun guessTurnAngleByTargetCorner(cornerX: Double) =
 		if (cornerX > CAMERA_MID_WIDTH) MAX_ANGLE_DEG else MIN_ANGLE_DEG
+
+	fun closedLoopTeleopCommand(cwRotationSupplier: () -> Double, ccwRotationSupplier: () -> Double): Command {
+		return run {
+			val setpoint =
+				(currentAngle + cwRotationSupplier() - ccwRotationSupplier()) * TurretConstants.TELEOP_ANGLE_MULTIPLIER
+			getToAngle(setpoint)
+		}
+	}
 }

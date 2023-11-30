@@ -20,4 +20,5 @@ object TurretConstants {
 	 * it should return the turret's angle in 0 to 360.
 	 */
 	const val GEAR_RATIO_ENCODER_TO_TURRET = 0.0
+	const val TELEOP_ANGLE_MULTIPLIER = 0.0
 }
