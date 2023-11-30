@@ -19,13 +19,17 @@ object TurretSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID)
 	private val encoder = CANCoder(RobotMap.Turret.CANCODER_ID)
 
-	private val currentAngle get() = encoder.position * TurretConstants.GEAR_RATIO_ENCODER_TO_TURRET
-	private val farthestTurnAngle get() = if (currentAngle >= 180) MIN_ANGLE_DEG else MAX_ANGLE_DEG
+	/** CCW positive, according to standard mathematical conventions (and WPILib). */
+	private val currentAngleDeg get() = encoder.position * TurretConstants.GEAR_RATIO_ENCODER_TO_TURRET
+	private val farthestTurnAngle get() = if (currentAngleDeg >= 180) MIN_ANGLE_DEG else MAX_ANGLE_DEG
 
 	init {
+		encoder.configSensorDirection(false) // TODO: verify Turret CANCoder is CCW positive
+		motor.inverted = false // TODO: verify Turret motor is CCW positive
+
 		encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
-		motor.forwardLimit = { currentAngle >= MAX_ANGLE_DEG }
-		motor.reverseLimit = { currentAngle <= MIN_ANGLE_DEG }
+		motor.forwardLimit = { currentAngleDeg >= MAX_ANGLE_DEG }
+		motor.reverseLimit = { currentAngleDeg <= MIN_ANGLE_DEG }
 
 		motor.config_kP(0, TurretConstants.kP)
 		motor.config_kI(0, TurretConstants.kI)
@@ -40,7 +44,7 @@ object TurretSubsystem : SubsystemBase() {
 		return run {
 			getToAngle(desiredAngle)
 		}.until {
-			val error = desiredAngle - currentAngle
+			val error = desiredAngle - currentAngleDeg
 			abs(error) <= TOLERANCE_DEGREES
 		}.finallyDo {
 			motor.stopMotor()
@@ -67,7 +71,7 @@ object TurretSubsystem : SubsystemBase() {
 				lastTargetLeftCornerX = target.detectedCorners.minBy { it.x }.x
 				currentTurnAngle = null
 
-				val desiredAngle = currentAngle - target.yaw
+				val desiredAngle = currentAngleDeg - target.yaw
 				getToAngle(desiredAngle)
 			}
 		}.finallyDo {
@@ -81,7 +85,7 @@ object TurretSubsystem : SubsystemBase() {
 	fun closedLoopTeleopCommand(cwRotationSupplier: () -> Double, ccwRotationSupplier: () -> Double): Command {
 		return run {
 			val setpoint =
-				(currentAngle + cwRotationSupplier() - ccwRotationSupplier()) * TurretConstants.TELEOP_ANGLE_MULTIPLIER
+				(currentAngleDeg + cwRotationSupplier() - ccwRotationSupplier()) * TurretConstants.TELEOP_ANGLE_MULTIPLIER
 			getToAngle(setpoint)
 		}
 	}
