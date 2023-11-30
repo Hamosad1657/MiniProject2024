@@ -9,7 +9,9 @@ import edu.wpi.first.math.MathUtil
 import edu.wpi.first.math.filter.Debouncer
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import frc.robot.RobotMap
 import frc.robot.subsystems.turret.TurretConstants.CAMERA_MID_WIDTH
 import frc.robot.subsystems.turret.TurretConstants.MAX_ANGLE_DEG
@@ -45,7 +47,7 @@ object TurretSubsystem : SubsystemBase() {
 	/**
 	 * @param desiredAngle May be any value, is not required to be in 0 to 360
 	 */
-	private fun getToAngle(desiredAngle: Rotation2d) {
+	private fun setAngle(desiredAngle: Rotation2d) {
 		motor.set(ControlMode.Position, MathUtil.inputModulus(desiredAngle.degrees, 0.0, 360.0))
 	}
 
@@ -55,12 +57,12 @@ object TurretSubsystem : SubsystemBase() {
 	fun getToAngleCommand(desiredAngle: Rotation2d): Command {
 		val angle = MathUtil.inputModulus(desiredAngle.degrees, 0.0, 360.0)
 
-		return run {
-			getToAngle(angle.degrees)
-		}.until {
+		return InstantCommand({
+			setAngle(angle.degrees)
+		}).andThen(WaitUntilCommand {
 			val error = angle - currentAngleDeg
 			abs(error) <= TOLERANCE_DEGREES
-		}.finallyDo {
+		}).finallyDo {
 			motor.stopMotor()
 		}
 	}
@@ -80,13 +82,13 @@ object TurretSubsystem : SubsystemBase() {
 						else farthestTurnAngle.degrees
 				}
 
-				getToAngle(currentTurnAngle!!)
+				setAngle(currentTurnAngle!!)
 			} else {
 				lastTargetLeftCornerX = target.detectedCorners.minBy { it.x }.x
 				currentTurnAngle = null
 
 				val desiredAngle = currentAngleDeg - target.yaw
-				getToAngle(desiredAngle.degrees)
+				setAngle(desiredAngle.degrees)
 			}
 		}.finallyDo {
 			motor.stopMotor()
@@ -100,7 +102,7 @@ object TurretSubsystem : SubsystemBase() {
 		return run {
 			val setpoint =
 				(currentAngleDeg + cwRotationSupplier() - ccwRotationSupplier()) * TurretConstants.TELEOP_ANGLE_MULTIPLIER
-			getToAngle(setpoint.degrees)
+			setAngle(setpoint.degrees)
 		}
 	}
 
