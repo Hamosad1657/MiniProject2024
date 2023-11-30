@@ -4,8 +4,10 @@ import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.sensors.AbsoluteSensorRange
 import com.ctre.phoenix.sensors.CANCoder
 import com.hamosad1657.lib.motors.HaTalonFX
+import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.math.filter.Debouncer
+import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
@@ -41,20 +43,20 @@ object TurretSubsystem : SubsystemBase() {
 	}
 
 	/**
-	 * @param desiredAngleDeg May be any value, is not required to be in 0 to 360
+	 * @param desiredAngle May be any value, is not required to be in 0 to 360
 	 */
-	private fun getToAngle(desiredAngleDeg: Double) {
-		motor.set(ControlMode.Position, MathUtil.inputModulus(desiredAngleDeg, 0.0, 360.0))
+	private fun getToAngle(desiredAngle: Rotation2d) {
+		motor.set(ControlMode.Position, MathUtil.inputModulus(desiredAngle.degrees, 0.0, 360.0))
 	}
 
 	/**
-	 * @param desiredAngleDeg May be any value, is not required to be in 0 to 360
+	 * @param desiredAngle May be any value, is not required to be in 0 to 360
 	 */
-	fun getToAngleCommand(desiredAngleDeg: Double): Command {
-		val angle = MathUtil.inputModulus(desiredAngleDeg, 0.0, 360.0)
+	fun getToAngleCommand(desiredAngle: Rotation2d): Command {
+		val angle = MathUtil.inputModulus(desiredAngle.degrees, 0.0, 360.0)
 
 		return run {
-			getToAngle(angle)
+			getToAngle(angle.degrees)
 		}.until {
 			val error = angle - currentAngleDeg
 			abs(error) <= TOLERANCE_DEGREES
@@ -63,10 +65,10 @@ object TurretSubsystem : SubsystemBase() {
 		}
 	}
 
-	fun fullTurnCommand(): Command = getToAngleCommand(farthestTurnAngle)
+	fun fullTurnCommand(): Command = getToAngleCommand(farthestTurnAngle.degrees)
 
 	fun trackTargetCommand(trackedTargetSupplier: () -> PhotonTrackedTarget?): Command {
-		var currentTurnAngle: Double? = null
+		var currentTurnAngle: Rotation2d? = null
 		var lastTargetLeftCornerX: Double? = null
 
 		return run {
@@ -74,8 +76,8 @@ object TurretSubsystem : SubsystemBase() {
 			if (target == null) {
 				if (currentTurnAngle == null) {
 					currentTurnAngle =
-						if (lastTargetLeftCornerX != null) guessTurnAngleByTargetCorner(lastTargetLeftCornerX!!)
-						else farthestTurnAngle
+						if (lastTargetLeftCornerX != null) guessTurnAngleByTargetCorner(lastTargetLeftCornerX!!).degrees
+						else farthestTurnAngle.degrees
 				}
 
 				getToAngle(currentTurnAngle!!)
@@ -84,7 +86,7 @@ object TurretSubsystem : SubsystemBase() {
 				currentTurnAngle = null
 
 				val desiredAngle = currentAngleDeg - target.yaw
-				getToAngle(desiredAngle)
+				getToAngle(desiredAngle.degrees)
 			}
 		}.finallyDo {
 			motor.stopMotor()
@@ -98,7 +100,7 @@ object TurretSubsystem : SubsystemBase() {
 		return run {
 			val setpoint =
 				(currentAngleDeg + cwRotationSupplier() - ccwRotationSupplier()) * TurretConstants.TELEOP_ANGLE_MULTIPLIER
-			getToAngle(setpoint)
+			getToAngle(setpoint.degrees)
 		}
 	}
 
