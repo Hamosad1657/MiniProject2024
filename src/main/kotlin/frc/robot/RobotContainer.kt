@@ -1,5 +1,6 @@
 package frc.robot
 
+import edu.wpi.first.wpilibj.PS4Controller
 import edu.wpi.first.wpilibj2.command.Command
 
 /**
@@ -13,26 +14,26 @@ import edu.wpi.first.wpilibj2.command.Command
  * to the various subsystems in this container to pass into to commands. The commands can just
  * directly reference the (single instance of the) object.
  */
-object RobotContainer
-{
-    init
-    {
-        configureBindings()
-    }
+object RobotContainer {
+	private val controllerA = PS4Controller(RobotMap.DRIVER_A_CONTROLLER_PORT)
+	private val controllerB = PS4Controller(RobotMap.DRIVER_B_CONTROLLER_PORT)
 
-    /** Use this method to define your `trigger->command` mappings. */
-    private fun configureBindings()
-    {
 
-    }
+	init {
+		configureBindings()
+	}
 
-    private fun setDefaultCommands() {
+	/** Use this method to define your `trigger->command` mappings. */
+	private fun configureBindings() {
 
-    }
+	}
 
-    fun getAutonomousCommand(): Command?
-    {
-        // TODO: Implement properly
-        return null
-    }
+	private fun setDefaultCommands() {
+
+	}
+
+	fun getAutonomousCommand(): Command? {
+		// TODO: Implement properly
+		return null
+	}
 }

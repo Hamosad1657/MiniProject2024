@@ -1,6 +1,9 @@
 package frc.robot
 
 object RobotMap {
+	const val DRIVER_A_CONTROLLER_PORT = 0
+	const val DRIVER_B_CONTROLLER_PORT = 1
+
 	object Turret {
 		const val MOTOR_ID = 0
 		const val CANCODER_ID = 0
