@@ -20,6 +20,13 @@ object ShooterSubsystem : SubsystemBase() {
 		return run { set(angularVelocity) }.finallyDo { motor.set(0.0) }
 	}
 
+	fun shootBallsCommand(ballsPerSec: Double): Command {
+		val rotationsPerSec = ballsPerSec * ShooterConstants.SHOOTER_BALLS_PER_ROTATION
+		val angularVelocity = AngularVelocity.fromRps(rotationsPerSec)
+		return shootBallsCommand(angularVelocity)
+	}
+
+
 	private fun set(angularVelocity: AngularVelocity) {
 		motor.set(ControlMode.Position, angularVelocity.degPs)
 	}
