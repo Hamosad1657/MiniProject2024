@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
 import com.ctre.phoenix.sensors.CANCoder
 import com.hamosad1657.lib.motors.HaTalonFX
+import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj2.command.Command
@@ -16,6 +17,12 @@ object HoodSubsystem : SubsystemBase() {
 	private val encoder = CANCoder(RobotMap.Hood.ENCODER_ID)
 	private val motor = HaTalonFX(RobotMap.Hood.MOTOR_ID)
 	private val reverseLimitSwitch = DigitalInput(RobotMap.Hood.LIMIT_CHANNEL)
+	var setpoint = 0.degrees
+		private set(value) {
+			motor.set(ControlMode.Position, value.degrees)
+			field = setpoint
+		}
+
 
 	init {
 		motor.configRemoteFeedbackFilter(encoder, 0)
@@ -29,14 +36,14 @@ object HoodSubsystem : SubsystemBase() {
 		motor.config_kP(0, HoodConstants.PID_GAINS.kD)
 	}
 
-	fun getToAngleCommand(desiredAngleSupplier: () -> Double): Command {
+	fun getToAngleCommand(desiredAngleSupplier: () -> Rotation2d): Command {
 		return run {
 			getToAngle(desiredAngleSupplier())
 		}.finallyDo { motor.stopMotor() }
 	}
 
-	private fun getToAngle(desiredAngle: Double) {
-		return motor.set(ControlMode.Position, desiredAngle)
+	private fun getToAngle(desiredAngle: Rotation2d) {
+		setpoint = desiredAngle
 	}
 
 	val angle: Rotation2d

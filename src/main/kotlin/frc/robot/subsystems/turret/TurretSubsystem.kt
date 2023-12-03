@@ -24,12 +24,18 @@ import kotlin.math.abs
 object TurretSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID)
 	private val encoder = CANCoder(RobotMap.Turret.CANCODER_ID)
+	var setpoint = 0.degrees
+		private set(value) {
+			motor.set(ControlMode.Position, MathUtil.inputModulus(value.degrees, 0.0, 360.0))
+			field = value
+		}
 
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
 	private val currentAngleDeg get() = encoder.position * TurretConstants.GEAR_RATIO_ENCODER_TO_TURRET
 	private val farthestTurnAngle get() = if (currentAngleDeg >= 180) MIN_ANGLE_DEG else MAX_ANGLE_DEG
 
 	private val tagDetectionDebouncer = Debouncer(TAG_DETECTION_TIME_SEC)
+
 
 	init {
 		encoder.configSensorDirection(false) // TODO: verify Turret CANCoder is CCW positive
@@ -42,13 +48,16 @@ object TurretSubsystem : SubsystemBase() {
 		motor.config_kP(0, TurretConstants.kP)
 		motor.config_kI(0, TurretConstants.kI)
 		motor.config_kD(0, TurretConstants.kD)
+		setAngle(Rotation2d())
+		setpoint = Rotation2d()
 	}
+
 
 	/**
 	 * @param desiredAngle May be any value, is not required to be in 0 to 360
 	 */
 	private fun setAngle(desiredAngle: Rotation2d) {
-		motor.set(ControlMode.Position, MathUtil.inputModulus(desiredAngle.degrees, 0.0, 360.0))
+		setpoint = desiredAngle
 	}
 
 	/**
@@ -120,11 +129,11 @@ object TurretSubsystem : SubsystemBase() {
 	 * Return if saw tag of specified ID for over [TurretConstants.TAG_DETECTION_TIME_SEC] seconds.
 	 */
 	private fun seeingTag(tagID: Int, trackedTarget: PhotonTrackedTarget?): Boolean {
-		var seeingTheTagNow = false;
+		var seeingTheTagNow = false
 
 		if (trackedTarget != null) {
 			if (trackedTarget.fiducialId == tagID) {
-				seeingTheTagNow = true;
+				seeingTheTagNow = true
 			}
 		}
 		return tagDetectionDebouncer.calculate(seeingTheTagNow)

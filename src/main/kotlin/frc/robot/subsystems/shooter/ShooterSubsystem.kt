@@ -10,6 +10,12 @@ import frc.robot.RobotMap
 object ShooterSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Shooter.MOTOR_ID)
 
+	var setpoint = AngularVelocity.fromDegPs(0.0)
+		private set(value) {
+			motor.set(ControlMode.Velocity, angularVelocity.degPs)
+			field = value
+		}
+
 	init {
 		motor.config_kP(0, ShooterConstants.PID_GAINS.kP)
 		motor.config_kI(0, ShooterConstants.PID_GAINS.kI)
@@ -17,7 +23,7 @@ object ShooterSubsystem : SubsystemBase() {
 	}
 
 	fun shootBallsCommand(angularVelocity: AngularVelocity): Command {
-		return run { set(angularVelocity) }.finallyDo { motor.stopMotor() }
+		return run { setpoint = angularVelocity }.finallyDo { motor.stopMotor() }.withName("shootBallsCommand : $name")
 	}
 
 	fun shootBallsCommand(ballsPerSec: Double): Command {
@@ -28,7 +34,7 @@ object ShooterSubsystem : SubsystemBase() {
 
 
 	private fun set(angularVelocity: AngularVelocity) {
-		motor.set(ControlMode.Position, angularVelocity.degPs)
+		setpoint = angularVelocity
 	}
 
 	val ballsPerSecs: Double
