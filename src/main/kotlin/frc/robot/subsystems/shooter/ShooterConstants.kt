@@ -10,7 +10,7 @@ object ShooterConstants {
 
 	object Calculations {
 		const val BOILER_Y = 0.0
-		const val TURRET_Y = 0.0
+		const val TURRET_HEIGHT = 0.0
 		const val MAX_HEIGHT = 0.0
 		val WHEEL_RADIUS = 20.centimeters
 		const val G = 9.81
