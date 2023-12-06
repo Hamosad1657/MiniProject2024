@@ -28,14 +28,12 @@ class HoodShooterState(hoodAngle: Rotation2d, angularVelocity: AngularVelocity) 
 		fun fromLength(distanceToBoiler: Length): HoodShooterState {
 
 			val distance = distanceToBoiler.meters
-			val a =
-				(-BOILER_Y - TURRET_HEIGHT + 2.0 * MAX_HEIGHT + 2.0 * sqrt(MAX_HEIGHT.pow(2.0) + BOILER_Y * TURRET_HEIGHT - BOILER_Y * MAX_HEIGHT - TURRET_HEIGHT * MAX_HEIGHT)) / (distance.pow(
-					2.0
-				))
-
+			val a = (-BOILER_Y - TURRET_HEIGHT + 2.0 * MAX_HEIGHT + 2.0 * sqrt(
+				MAX_HEIGHT.pow(2.0) + BOILER_Y * TURRET_HEIGHT - BOILER_Y * MAX_HEIGHT - TURRET_HEIGHT * MAX_HEIGHT
+			)) / (distance.pow(2.0))
 			val b = (BOILER_Y - TURRET_HEIGHT + a * (distance.pow(2.0))) / (distance)
 
-			val hoodAngle = (atan(b)).radians
+			val hoodAngle = atan(b).radians
 			val shooterVelocityMps = sqrt(2 * G * (MAX_HEIGHT - TURRET_HEIGHT)) / sin(hoodAngle.radians)
 
 			return HoodShooterState(hoodAngle, AngularVelocity.fromMps(shooterVelocityMps, WHEEL_RADIUS))
