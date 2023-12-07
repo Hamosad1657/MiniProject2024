@@ -15,24 +15,21 @@ object ShooterSubsystem : SubsystemBase() {
 		config_kI(0, ShooterConstants.PID_GAINS.kI)
 		config_kD(0, ShooterConstants.PID_GAINS.kD)
 	}
-	var setpoint = AngularVelocity.fromDegPs(0.0)
-		set(value) {
-			motor.set(ControlMode.Velocity, angularVelocity.degPs)
-			field = value
-		}
+
 	val ballsPerSecs: Double
 		get() = angularVelocity.rps * ShooterConstants.SHOOTER_BALLS_PER_ROTATION
+
 	val angularVelocity: AngularVelocity
 		get() = AngularVelocity.fromFalconTicksPer100ms(motor.selectedSensorVelocity)
 
-	fun shootBallsCommand(angularVelocity: AngularVelocity): Command {
-		return withName("shootBalls") {
-			ShooterSubsystem.run { ShooterSubsystem.setpoint = angularVelocity } andThen
-				ShooterSubsystem.runOnce { ShooterSubsystem.motor.stopMotor() }
-		}
+	private fun setSetpoint(velocity: AngularVelocity) {
+		motor.set(ControlMode.Velocity, angularVelocity.degPs)
 	}
 
-	private fun set(angularVelocity: AngularVelocity) {
-		setpoint = angularVelocity
+	fun shootBallsCommand(angularVelocity: AngularVelocity): Command {
+		return withName("shootBalls") {
+			ShooterSubsystem.run { setSetpoint(angularVelocity) } andThen
+				ShooterSubsystem.runOnce { motor.stopMotor() }
+		}
 	}
 }
