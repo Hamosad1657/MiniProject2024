@@ -1,18 +1,13 @@
-package com.hamosad1657.lib.mechanisms.shooterWithHood
+package frc.robot.mechanisms
 
-import com.hamosad1657.lib.units.AngularVelocity
-import com.hamosad1657.lib.units.Length
-import com.hamosad1657.lib.units.radians
+import com.hamosad1657.lib.units.*
 import edu.wpi.first.math.geometry.Rotation2d
 import frc.robot.subsystems.shooter.ShooterConstants.Calculations.BOILER_Y
 import frc.robot.subsystems.shooter.ShooterConstants.Calculations.G
 import frc.robot.subsystems.shooter.ShooterConstants.Calculations.MAX_HEIGHT
 import frc.robot.subsystems.shooter.ShooterConstants.Calculations.TURRET_HEIGHT
 import frc.robot.subsystems.shooter.ShooterConstants.Calculations.WHEEL_RADIUS
-import kotlin.math.atan
-import kotlin.math.pow
-import kotlin.math.sin
-import kotlin.math.sqrt
+import kotlin.math.*
 
 
 // Class that contains shooter velocity and hood angle
