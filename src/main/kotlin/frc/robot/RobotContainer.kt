@@ -1,7 +1,7 @@
 package frc.robot
 
-import edu.wpi.first.wpilibj.PS4Controller
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.Command
  * directly reference the (single instance of the) object.
  */
 object RobotContainer {
-	private val controllerA = PS4Controller(RobotMap.DRIVER_A_CONTROLLER_PORT)
-	private val controllerB = PS4Controller(RobotMap.DRIVER_B_CONTROLLER_PORT)
+	private val controllerA = CommandPS4Controller(RobotMap.DRIVER_A_CONTROLLER_PORT)
+	private val controllerB = CommandPS4Controller(RobotMap.DRIVER_B_CONTROLLER_PORT)
 
 
 	init {
@@ -25,7 +25,6 @@ object RobotContainer {
 
 	/** Use this method to define your `trigger->command` mappings. */
 	private fun configureBindings() {
-
 	}
 
 	private fun setDefaultCommands() {
