@@ -29,9 +29,7 @@ object TurretSubsystem : SubsystemBase() {
 	}
 
 	var setpoint = 0.degrees
-		private set(value) {
-			field = value
-		}
+		private set
 
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
 	val currentAngleDeg get() = encoder.position * Constants.GEAR_RATIO_ENCODER_TO_TURRET
@@ -40,14 +38,13 @@ object TurretSubsystem : SubsystemBase() {
 	private val tagDetectionDebouncer = Debouncer(Constants.TAG_DETECTION_TIME_SEC)
 
 	init {
-		setAngle(Rotation2d())
-		setpoint = Rotation2d()
+		setAngleSetpoint(Constants.MIN_ANGLE_DEG.degrees)
 	}
 
 	/**
 	 * @param desiredAngle Can be any value, is not required to be in 0 to 360
 	 */
-	fun setAngle(desiredAngle: Rotation2d) {
+	fun setAngleSetpoint(desiredAngle: Rotation2d) {
 		setpoint = desiredAngle
 	}
 
