@@ -7,7 +7,7 @@ import frc.robot.subsystems.loader.LoaderSubsystem
 
 fun LoaderSubsystem.loadCommand(ballsPerSecs: () -> Double): Command {
 	return withName("load") {
-		LoaderSubsystem.run { LoaderSubsystem.load(ballsPerSecs()) } andThen
-			LoaderSubsystem.runOnce { LoaderSubsystem.motor.stopMotor() }
+		LoaderSubsystem.run { load(ballsPerSecs()) } andThen
+			LoaderSubsystem.runOnce { motor.stopMotor() }
 	}
 }

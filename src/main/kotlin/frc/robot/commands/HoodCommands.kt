@@ -9,9 +9,9 @@ import frc.robot.subsystems.hood.HoodSubsystem
 fun HoodSubsystem.getToAngleCommand(desiredAngleSupplier: () -> Rotation2d): Command {
 	return withName("getToAngle") {
 		HoodSubsystem.run {
-			HoodSubsystem.getToAngle(desiredAngleSupplier())
+			getToAngle(desiredAngleSupplier())
 		} andThen HoodSubsystem.runOnce {
-			HoodSubsystem.motor.stopMotor()
+			motor.stopMotor()
 		}
 	}
 }

@@ -8,5 +8,5 @@ import frc.robot.subsystems.shooter.ShooterSubsystem
 fun ShooterSubsystem.shootBallsCommand(ballsPerSec: Double): Command {
 	val rotationsPerSec = ballsPerSec * ShooterConstants.SHOOTER_BALLS_PER_ROTATION
 	val angularVelocity = AngularVelocity.fromRps(rotationsPerSec)
-	return ShooterSubsystem.shootBallsCommand(angularVelocity)
+	return shootBallsCommand(angularVelocity)
 }

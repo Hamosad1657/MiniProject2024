@@ -18,19 +18,19 @@ fun TurretSubsystem.getToAngleCommand(desiredAngle: Rotation2d): Command {
 
 	return withName("getToAngle") {
 		TurretSubsystem.runOnce {
-			TurretSubsystem.setAngle(angle.degrees)
+			TurretSubsystem.setAngleSetpoint(angle.degrees)
 		} andThen waitUntil {
-			val error = angle - TurretSubsystem.currentAngleDeg
+			val error = angle - currentAngleDeg
 			abs(error) <= TurretConstants.TOLERANCE_DEGREES
 		} andThen TurretSubsystem.runOnce {
-			TurretSubsystem.motor.stopMotor()
+			motor.stopMotor()
 		}
 	}
 }
 
 fun TurretSubsystem.fullTurnCommand(): Command =
 	withName("fullTurn") {
-		getToAngleCommand(TurretSubsystem.farthestTurnAngle.degrees)
+		getToAngleCommand(farthestTurnAngle.degrees)
 	}
 
 /**
@@ -41,7 +41,7 @@ fun TurretSubsystem.fullTurnCommand(): Command =
  */
 fun TurretSubsystem.searchForTagCommand(tagID: Int, trackedTargetSupplier: () -> PhotonTrackedTarget?): Command {
 	return TurretSubsystem.fullTurnCommand() andThen TurretSubsystem.fullTurnCommand() until {
-		TurretSubsystem.seeingTag(
+		seeingTag(
 			tagID,
 			trackedTargetSupplier()
 		)
@@ -57,22 +57,22 @@ fun TurretSubsystem.trackTargetCommand(trackedTargetSupplier: () -> PhotonTracke
 		if (target == null) {
 			if (currentTurnAngle == null) {
 				currentTurnAngle =
-					if (lastTargetLeftCornerX != null) TurretSubsystem.guessTurnAngleByTargetCorner(
+					if (lastTargetLeftCornerX != null) guessTurnAngleByTargetCorner(
 						lastTargetLeftCornerX!!
 					).degrees
-					else TurretSubsystem.farthestTurnAngle.degrees
+					else farthestTurnAngle.degrees
 			}
 
-			TurretSubsystem.setAngle(currentTurnAngle!!)
+			setAngleSetpoint(currentTurnAngle!!)
 		} else {
 			lastTargetLeftCornerX = target.detectedCorners.minBy { it.x }.x
 			currentTurnAngle = null
 
-			val desiredAngle = TurretSubsystem.currentAngleDeg - target.yaw
-			TurretSubsystem.setAngle(desiredAngle.degrees)
+			val desiredAngle = currentAngleDeg - target.yaw
+			setAngleSetpoint(desiredAngle.degrees)
 		}
 	}.finallyDo {
-		TurretSubsystem.motor.stopMotor()
+		motor.stopMotor()
 	}
 }
 
@@ -83,7 +83,7 @@ fun TurretSubsystem.closedLoopTeleopCommand(
 	return TurretSubsystem.run {
 
 		val setpoint =
-			(TurretSubsystem.currentAngleDeg + cwRotationSupplier() - ccwRotationSupplier()) * TurretConstants.TELEOP_ANGLE_MULTIPLIER
-		TurretSubsystem.setAngle(setpoint.degrees)
+			(currentAngleDeg + cwRotationSupplier() - ccwRotationSupplier()) * TurretConstants.TELEOP_ANGLE_MULTIPLIER
+		setAngleSetpoint(setpoint.degrees)
 	}
 }

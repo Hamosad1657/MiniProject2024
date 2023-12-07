@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.intake.IntakeSubsystem
 
 fun IntakeSubsystem.collectCommand(): Command {
-	return withName("collect") { IntakeSubsystem.run { IntakeSubsystem.collect() } }
+	return withName("collect") { IntakeSubsystem.run { collect() } }
 }
 
 fun IntakeSubsystem.stopIntakeCommand(): Command {
