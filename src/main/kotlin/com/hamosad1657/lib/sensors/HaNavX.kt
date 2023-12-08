@@ -25,12 +25,12 @@ class HaNavX : Sendable {
 	/** The angle of the navX in range [[-180, 180]] on the Vertical-axis (perpendicular to earth, left / right rotation).
 	 *
 	 * Larger value is counter-clockwise, according to WPILib's coordinate system. */
-	val yawDeg get() = -navX!!.yaw.toDouble() - yawOffsetDeg
+	private val yawDeg get() = -navX!!.yaw.toDouble() - yawOffsetDeg
 
 	/** The angle of the navX in range [[-PI, PI]] on the Vertical-axis (perpendicular to earth, left / right rotation).
 	 *
 	 * Larger value is counter-clockwise, according to WPILib's coordinate system. */
-	val yawRad get() = degToRad(yawDeg)
+	private val yawRad get() = degToRad(yawDeg)
 
 	/** The angle of the navX in range [[-180, 180]] on the Vertical-axis (perpendicular to earth, left / right rotation).
 	 *
@@ -40,12 +40,12 @@ class HaNavX : Sendable {
 	/** The angle of the navX in range [[-180, 180]] on the Transverse-axis (down / up rotation).
 	 *
 	 * Larger value is counter-clockwise, according to WPILib's coordinate system. */
-	val pitchDeg get() = navX!!.pitch.toDouble()
+	private val pitchDeg get() = navX!!.pitch.toDouble()
 
 	/** The angle of the navX in range [[-PI, PI]] on the Transverse-axis (down / up rotation).
 	 *
 	 * Larger value is counter-clockwise, according to WPILib's coordinate system. */
-	val pitchRad get() = degToRad(pitchDeg)
+	private val pitchRad get() = degToRad(pitchDeg)
 
 	/** The angle of the navX in range [[-180, 180]] on the Transverse-axis (down / up rotation).
 	 *
@@ -55,12 +55,12 @@ class HaNavX : Sendable {
 	/** The angle of the navX in range [[-180, 180]] on the Longitudinal-axis (lean right / lean left rotation).
 	 *
 	 * Larger value is counter-clockwise, according to WPILib's coordinate system. */
-	val rollDeg get() = navX!!.roll.toDouble()
+	private val rollDeg get() = navX!!.roll.toDouble()
 
 	/** The angle of the navX in range [[-PI, PI]] on the Longitudinal-axis (lean right / lean left rotation).
 	 *
 	 * Larger value is counter-clockwise, according to WPILib's coordinate system. */
-	val rollRad get() = degToRad(rollDeg)
+	private val rollRad get() = degToRad(rollDeg)
 
 	/** The angle of the navX in range [[-180, 180]] on the Longitudinal-axis (lean right / lean left rotation).
 	 *
@@ -71,7 +71,7 @@ class HaNavX : Sendable {
 	 * on the Vertical-axis (perpendicular to earth, left / right rotation).
 	 *
 	 * Larger value is counter-clockwise, according to WPILib's coordinate system. */
-	val yawAngularVelocity get() = AngularVelocity.fromDegPs(navX!!.rate)
+	private val yawAngularVelocity get() = AngularVelocity.fromDegPs(navX!!.rate)
 
 	/** Returns the total accumulated yaw angle (Z Axis, in degrees) reported by the sensor.
 	 *
@@ -160,7 +160,7 @@ class HaNavX : Sendable {
 	}
 
 	/** Sets the currently facing yaw angle as the zero minus the offset. */
-	fun setYaw(offsetDeg: Double) {
+	private fun setYaw(offsetDeg: Double) {
 		try {
 			navX!!.zeroYaw()
 			yawOffsetDeg = offsetDeg

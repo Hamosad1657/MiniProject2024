@@ -1,9 +1,6 @@
 package frc.robot.subsystems.swerve
 
-import com.pathplanner.lib.PathConstraints
-import com.pathplanner.lib.PathPlanner
-import com.pathplanner.lib.PathPlannerTrajectory
-import com.pathplanner.lib.PathPoint
+import com.pathplanner.lib.*
 import com.pathplanner.lib.auto.SwerveAutoBuilder
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
@@ -16,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Robot
-import frc.robot.subsystems.vision.Vision
+import frc.robot.Vision
 import swervelib.SwerveController
 import swervelib.SwerveDrive
 import swervelib.parser.SwerveDriveConfiguration
@@ -33,7 +30,7 @@ object SwerveSubsystem : SubsystemBase() {
 	val fieldVelocity: ChassisSpeeds get() = swerveDrive.fieldVelocity
 
 	/** Gets the current yaw angle of the robot, as reported by the imu.  CCW positive, not wrapped. */
-	val heading: Rotation2d get() = swerveDrive.yaw
+	private val heading: Rotation2d get() = swerveDrive.yaw
 
 	/** Get the swerve drive kinematics object.*/
 	val kinematics: SwerveDriveKinematics get() = swerveDrive.kinematics

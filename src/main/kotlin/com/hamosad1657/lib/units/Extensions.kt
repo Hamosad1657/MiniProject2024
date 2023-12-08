@@ -45,3 +45,5 @@ inline val Int.radians: Rotation2d get() = Rotation2d.fromRadians(this.toDouble(
 
 inline val Double.rotations: Rotation2d get() = Rotation2d.fromRotations(this)
 inline val Int.rotations: Rotation2d get() = Rotation2d.fromRotations(this.toDouble())
+
+operator fun Rotation2d.compareTo(other: Rotation2d): Int = this.degrees.compareTo(other.degrees)

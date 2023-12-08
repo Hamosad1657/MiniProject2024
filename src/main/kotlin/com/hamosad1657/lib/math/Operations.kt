@@ -4,7 +4,11 @@ import edu.wpi.first.math.MathUtil
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
-import kotlin.math.sign
+
+/**
+ * Wraps [angleDeg] to a range of [0-360] degrees.
+ */
+fun wrap0to360(angleDeg: Double): Double = MathUtil.inputModulus(angleDeg, 0.0, 360.0)
 
 /**
  * If the absolute value is smaller than the deadband, the value becomes 0.

@@ -2,8 +2,6 @@ package com.hamosad1657.lib.motors
 
 import com.hamosad1657.lib.math.clamp
 import com.revrobotics.CANSparkMax
-import com.revrobotics.SparkMaxPIDController
-import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.util.sendable.Sendable
 import edu.wpi.first.util.sendable.SendableBuilder
 

@@ -2,6 +2,7 @@ package com.hamosad1657.lib.motors
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
+import com.hamosad1657.lib.math.PIDGains
 import com.hamosad1657.lib.math.clamp
 import com.hamosad1657.lib.math.wrapPositionSetpoint
 
@@ -24,11 +25,11 @@ class HaTalonSRX(deviceID: Int) : WPI_TalonSRX(deviceID) {
 	 */
 	var reverseLimit: () -> Boolean = { false }
 
-	var minPercentOutput = -1.0
+	private var minPercentOutput = -1.0
 		set(value) {
 			field = value.coerceAtLeast(-1.0)
 		}
-	var maxPercentOutput = 1.0
+	private var maxPercentOutput = 1.0
 		set(value) {
 			field = value.coerceAtMost(1.0)
 		}
@@ -99,5 +100,11 @@ class HaTalonSRX(deviceID: Int) : WPI_TalonSRX(deviceID) {
 
 	fun disablePositionWrap() {
 		isPositionWrapEnabled = false
+	}
+
+	fun configPIDGains(gains: PIDGains, slotIndex: Int = 0) {
+		config_kP(slotIndex, gains.kP)
+		config_kI(slotIndex, gains.kI)
+		config_kD(slotIndex, gains.kD)
 	}
 }

@@ -1,6 +1,8 @@
 package frc.robot.mechanisms
 
-import com.hamosad1657.lib.units.*
+import com.hamosad1657.lib.units.AngularVelocity
+import com.hamosad1657.lib.units.Length
+import com.hamosad1657.lib.units.radians
 import edu.wpi.first.math.geometry.Rotation2d
 import frc.robot.subsystems.shooter.ShooterConstants.Calculations.BOILER_Y
 import frc.robot.subsystems.shooter.ShooterConstants.Calculations.G
@@ -9,23 +11,20 @@ import frc.robot.subsystems.shooter.ShooterConstants.Calculations.TURRET_HEIGHT
 import frc.robot.subsystems.shooter.ShooterConstants.Calculations.WHEEL_RADIUS
 import kotlin.math.*
 
-
 // Class that contains shooter velocity and hood angle
 // and the calculation function will return and instance of this class
 // (aka will return both velocity and angle)
 
 class HoodShooterState(hoodAngle: Rotation2d, angularVelocity: AngularVelocity) {
 	companion object {
-
 		/**
 		 * @param distanceToBoiler from shooter, get from vision.
 		 */
 		fun fromLength(distanceToBoiler: Length): HoodShooterState {
-
 			val distance = distanceToBoiler.meters
-			val a = (-BOILER_Y - TURRET_HEIGHT + 2.0 * MAX_HEIGHT + 2.0 * sqrt(
-				MAX_HEIGHT.pow(2.0) + BOILER_Y * TURRET_HEIGHT - BOILER_Y * MAX_HEIGHT - TURRET_HEIGHT * MAX_HEIGHT
-			)) / (distance.pow(2.0))
+			val a = (-BOILER_Y - TURRET_HEIGHT + 2.0 * MAX_HEIGHT + 2.0 *
+				sqrt(MAX_HEIGHT.pow(2.0) + BOILER_Y * TURRET_HEIGHT - BOILER_Y * MAX_HEIGHT - TURRET_HEIGHT * MAX_HEIGHT)) /
+				distance.pow(2.0)
 			val b = (BOILER_Y - TURRET_HEIGHT + a * (distance.pow(2.0))) / (distance)
 
 			val hoodAngle = atan(b).radians

@@ -20,12 +20,9 @@ object RobotMap {
 	}
 
 	object Conveyor {
-		const val MOTOR_ID = 0
-		const val ENCODER_ID = 0
-	}
-
-	object Loader {
-		const val MOTOR_ID = 0
+		const val CONVEYOR_MOTOR_ID = 0
+		const val CONVEYOR_ENCODER_ID = 0
+		const val LOADER_MOTOR_ID = 0
 	}
 
 	object Intake {

@@ -10,6 +10,7 @@ import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.I2C
 import edu.wpi.first.wpilibj.util.Color
 
+@Suppress("MemberVisibilityCanBePrivate", "DuplicatedCode")
 class HaColorSensor(port: I2C.Port) : Sendable {
 	private val colorSensor: ColorSensorV3
 
@@ -55,22 +56,22 @@ class HaColorSensor(port: I2C.Port) : Sendable {
 	fun isRawColorInRange(minColorRaw: RawColor, maxColorRaw: RawColor): Boolean {
 		val color = colorSensor.rawColor
 		return color.red >= minColorRaw.red &&
-				color.red <= maxColorRaw.red &&
-				color.blue >= minColorRaw.blue &&
-				color.blue <= maxColorRaw.blue &&
-				color.green >= minColorRaw.green &&
-				color.green <= maxColorRaw.green
+			color.red <= maxColorRaw.red &&
+			color.blue >= minColorRaw.blue &&
+			color.blue <= maxColorRaw.blue &&
+			color.green >= minColorRaw.green &&
+			color.green <= maxColorRaw.green
 	}
 
 	/** Checks whether the detected color is in the specified range (inclusive). */
 	fun isColorInRange(minColor: Color, maxColor: Color): Boolean {
 		val color = colorSensor.color
 		return color.red >= minColor.red &&
-				color.red <= maxColor.red &&
-				color.blue >= minColor.blue &&
-				color.blue <= maxColor.blue &&
-				color.green >= minColor.green &&
-				color.green <= maxColor.green
+			color.red <= maxColor.red &&
+			color.blue >= minColor.blue &&
+			color.blue <= maxColor.blue &&
+			color.green >= minColor.green &&
+			color.green <= maxColor.green
 	}
 
 	/** Checks whether the detected proximity is in the specified range (inclusive). */

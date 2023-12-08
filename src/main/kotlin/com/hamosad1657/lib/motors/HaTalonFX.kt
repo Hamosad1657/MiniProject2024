@@ -2,6 +2,7 @@ package com.hamosad1657.lib.motors
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX
+import com.hamosad1657.lib.math.PIDGains
 import com.hamosad1657.lib.math.clamp
 import com.hamosad1657.lib.math.wrapPositionSetpoint
 import com.hamosad1657.lib.units.FALCON_TICKS_PER_ROTATION
@@ -13,7 +14,6 @@ import com.hamosad1657.lib.units.FALCON_TICKS_PER_ROTATION
  * https://www.revrobotics.com/neo-brushless-motor-locked-rotor-testing/
  *
  */
-const val FalconSafeTempC = 90
 
 class HaTalonFX(deviceNumber: Int) : WPI_TalonFX(deviceNumber) {
 	init {
@@ -34,17 +34,17 @@ class HaTalonFX(deviceNumber: Int) : WPI_TalonFX(deviceNumber) {
 	 */
 	var reverseLimit: () -> Boolean = { false }
 
-	var minPercentOutput = -1.0
+	private var minPercentOutput = -1.0
 		set(value) {
 			field = value.coerceAtLeast(-1.0)
 		}
-	var maxPercentOutput = 1.0
+	private var maxPercentOutput = 1.0
 		set(value) {
 			field = value.coerceAtMost(1.0)
 		}
 
-	var isTempSafe = true
-		get() = temperature < FalconSafeTempC
+	var isTemperatureSafe = true
+		get() = temperature < FALCON_SAFE_TEMP_C
 		private set
 
 	private var minMeasurement: Double = 0.0
@@ -113,5 +113,15 @@ class HaTalonFX(deviceNumber: Int) : WPI_TalonFX(deviceNumber) {
 
 	fun disablePositionWrap() {
 		isPositionWrapEnabled = false
+	}
+
+	fun configPIDGains(gains: PIDGains, slotIndex: Int = 0) {
+		config_kP(slotIndex, gains.kP)
+		config_kI(slotIndex, gains.kI)
+		config_kD(slotIndex, gains.kD)
+	}
+
+	companion object {
+		const val FALCON_SAFE_TEMP_C = 90
 	}
 }

@@ -1,21 +1,19 @@
 package frc.robot.subsystems.turret
 
+import com.hamosad1657.lib.math.PIDGains
+import com.hamosad1657.lib.units.degrees
+
 object TurretConstants {
-	const val kP = 0.0
-	const val kI = 0.0
-	const val kD = 0.0
+	val PID_GAINS = PIDGains(0.0, 0.0, 0.0)
 
 	const val TOLERANCE_DEGREES = 0.0
 
-	const val MIN_ANGLE_DEG = 0.0
-	const val MAX_ANGLE_DEG = 350.0
+	val MIN_ANGLE = 0.0.degrees
+	val MAX_ANGLE = 350.0.degrees
 
 	const val SCAN_FOR_TAGS_ROTATION_OUTPUT = 0.0
 
-	/**
-	 * In pixels
-	 */
-	const val CAMERA_MID_WIDTH = 300
+	const val CAMERA_WIDTH = 600
 
 	/**
 	 * When multiplying this ratio by the degrees measured by the encoder,
