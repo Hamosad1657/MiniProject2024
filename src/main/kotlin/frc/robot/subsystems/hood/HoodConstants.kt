@@ -7,5 +7,7 @@ object HoodConstants {
 	val PID_GAINS = PIDGains(0.0, 0.0, 0.0)
 
 	const val GEAR_RATIO_ENCODER_TO_HOOD = 0.0
+
+	val MIN_HOOD_ANGLE = 0.0.degrees
 	val MAX_HOOD_ANGLE = 180.0.degrees
 }
