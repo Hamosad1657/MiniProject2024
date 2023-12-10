@@ -19,4 +19,8 @@ object ShooterSubsystem : SubsystemBase() {
 	fun getToVelocity(velocity: AngularVelocity) {
 		motor.set(ControlMode.Velocity, velocity.degPs)
 	}
+
+	fun stopShooter() {
+		motor.stopMotor()
+	}
 }
