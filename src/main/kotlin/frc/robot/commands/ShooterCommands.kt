@@ -20,3 +20,9 @@ fun ShooterSubsystem.shootBallsCommand(angularVelocity: AngularVelocity): Comman
 		} andThen runOnce(motor::stopMotor)
 	}
 }
+
+fun ShooterSubsystem.stopCommand(): Command {
+	return withName("stopShooter") {
+		runOnce { stopShooter() }
+	}
+}
