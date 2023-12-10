@@ -21,7 +21,6 @@ object RobotMap {
 
 	object Conveyor {
 		const val CONVEYOR_MOTOR_ID = 0
-		const val CONVEYOR_ENCODER_ID = 0
 		const val LOADER_MOTOR_ID = 0
 	}
 
