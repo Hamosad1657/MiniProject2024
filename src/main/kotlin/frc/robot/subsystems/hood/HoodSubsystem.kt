@@ -18,7 +18,7 @@ object HoodSubsystem : SubsystemBase() {
 	private val encoder = CANCoder(RobotMap.Hood.ENCODER_ID)
 	private val reverseLimitSwitch = DigitalInput(RobotMap.Hood.LIMIT_CHANNEL)
 
-	val motor = HaTalonFX(RobotMap.Hood.MOTOR_ID).apply {
+	private val motor = HaTalonFX(RobotMap.Hood.MOTOR_ID).apply {
 		configRemoteFeedbackFilter(encoder, 0)
 		configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0)
 		configPIDGains(Constants.PID_GAINS)
@@ -36,5 +36,9 @@ object HoodSubsystem : SubsystemBase() {
 			clamp(desiredAngle.degrees, Constants.MIN_HOOD_ANGLE.degrees, Constants.MAX_HOOD_ANGLE.degrees)
 		val setpointDeg = clampedDesiredAngle / GEAR_RATIO_ENCODER_TO_HOOD
 		motor.set(ControlMode.Position, setpointDeg)
+	}
+
+	fun stopHood() {
+		motor.stopMotor()
 	}
 }
