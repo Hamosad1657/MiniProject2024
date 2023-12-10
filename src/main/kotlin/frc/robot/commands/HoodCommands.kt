@@ -10,6 +10,10 @@ fun HoodSubsystem.getToAngleCommand(desiredAngleSupplier: () -> Rotation2d): Com
 	return withName("getToAngle") {
 		run {
 			getToAngle(desiredAngleSupplier())
-		} andThen runOnce(motor::stopMotor)
+		} andThen stopCommand()
 	}
+}
+
+fun HoodSubsystem.stopCommand(): Command {
+	return withName("stopHood") { runOnce { stopHood() } }
 }
