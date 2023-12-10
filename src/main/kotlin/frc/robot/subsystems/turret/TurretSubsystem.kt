@@ -11,7 +11,9 @@ import edu.wpi.first.math.filter.Debouncer
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
+import frc.robot.subsystems.turret.TurretConstants
 import org.photonvision.targeting.PhotonTrackedTarget
+import kotlin.math.abs
 import frc.robot.subsystems.turret.TurretConstants as Constants
 
 object TurretSubsystem : SubsystemBase() {
@@ -31,6 +33,8 @@ object TurretSubsystem : SubsystemBase() {
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
 	val currentAngle: Rotation2d get() = Rotation2d.fromDegrees(encoder.position * Constants.GEAR_RATIO_ENCODER_TO_TURRET)
 	val farthestTurnAngle get() = if (currentAngle.degrees >= 180) Constants.MIN_ANGLE else Constants.MAX_ANGLE
+
+	private var setpoint = Rotation2d()
 
 	private val tagDetectionDebouncer = Debouncer(Constants.TAG_DETECTION_TIME_SEC)
 
@@ -56,5 +60,10 @@ object TurretSubsystem : SubsystemBase() {
 	 */
 	fun isTagDetected(tagID: Int, trackedTarget: PhotonTrackedTarget?): Boolean {
 		return tagDetectionDebouncer.calculate(trackedTarget != null && trackedTarget.fiducialId == tagID)
+	}
+
+	fun withinTolerance(): Boolean {
+		val error = setpoint - currentAngle
+		return error.degrees <= abs(TurretConstants.TOLERANCE_DEGREES)
 	}
 }

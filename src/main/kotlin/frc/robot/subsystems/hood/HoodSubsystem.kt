@@ -10,7 +10,9 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
+import frc.robot.subsystems.hood.HoodConstants
 import frc.robot.subsystems.hood.HoodConstants.GEAR_RATIO_ENCODER_TO_HOOD
+import kotlin.math.abs
 import frc.robot.subsystems.hood.HoodConstants as Constants
 
 
@@ -24,7 +26,9 @@ object HoodSubsystem : SubsystemBase() {
 		configPIDGains(Constants.PID_GAINS)
 	}
 
+
 	private val currentAngle: Rotation2d get() = Rotation2d.fromDegrees(encoder.position * GEAR_RATIO_ENCODER_TO_HOOD)
+	private var setpoint = Rotation2d()
 
 	init {
 		motor.forwardLimit = { currentAngle >= Constants.MAX_HOOD_ANGLE }
@@ -32,6 +36,7 @@ object HoodSubsystem : SubsystemBase() {
 	}
 
 	fun getToAngle(desiredAngle: Rotation2d) {
+		setpoint = desiredAngle
 		val clampedDesiredAngle =
 			clamp(desiredAngle.degrees, Constants.MIN_HOOD_ANGLE.degrees, Constants.MAX_HOOD_ANGLE.degrees)
 		val setpointDeg = clampedDesiredAngle / GEAR_RATIO_ENCODER_TO_HOOD
@@ -40,5 +45,10 @@ object HoodSubsystem : SubsystemBase() {
 
 	fun stopHood() {
 		motor.stopMotor()
+	}
+
+	fun withinTolerance(): Boolean {
+		val error = setpoint - currentAngle
+		return error.degrees <= abs(HoodConstants.ANGLE_TOLERANCE.degrees)
 	}
 }

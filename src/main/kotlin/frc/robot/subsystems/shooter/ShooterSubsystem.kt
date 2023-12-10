@@ -5,6 +5,7 @@ import com.hamosad1657.lib.motors.HaTalonFX
 import com.hamosad1657.lib.units.AngularVelocity
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
+import kotlin.math.abs
 import frc.robot.subsystems.shooter.ShooterConstants as Constants
 
 object ShooterSubsystem : SubsystemBase() {
@@ -16,11 +17,19 @@ object ShooterSubsystem : SubsystemBase() {
 
 	private val angularVelocity get() = AngularVelocity.fromFalconTicksPer100ms(motor.selectedSensorVelocity)
 
+	private var setpoint = AngularVelocity.fromRpm(0.0)
+
 	fun getToVelocity(velocity: AngularVelocity) {
+		setpoint = velocity
 		motor.set(ControlMode.Velocity, velocity.degPs)
 	}
 
 	fun stopShooter() {
 		motor.stopMotor()
+	}
+
+	fun withinTolerance(): Boolean {
+		val error = setpoint - angularVelocity
+		return error.rpm <= abs(Constants.VELOCITY_TOLERANCE.rpm)
 	}
 }
