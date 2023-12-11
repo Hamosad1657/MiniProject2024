@@ -2,6 +2,7 @@ package frc.robot.subsystems.conveyor
 
 import com.hamosad1657.lib.motors.HaCANSparkMax
 import com.revrobotics.CANSparkMax.ControlType
+import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
 import frc.robot.subsystems.conveyor.ConveyorConstants as Constants
@@ -15,7 +16,7 @@ object ConveyorSubsystem : SubsystemBase() {
 	private val conveyorEncoder = conveyorMotor.encoder
 	private val conveyorPIDController = conveyorMotor.pidController
 
-	val conveyorBallsPerSecs: Double
+	val conveyorBallsPerSec: Double
 		get() = conveyorEncoder.velocity * Constants.CONVEYOR_VELOCITY_RATIO
 
 	val loaderBallsPerSec: Double
@@ -37,5 +38,10 @@ object ConveyorSubsystem : SubsystemBase() {
 
 	fun stopLoader() {
 		loaderMotor.stopMotor()
+	}
+
+	override fun initSendable(builder: SendableBuilder) {
+		builder.addDoubleProperty("Conveyor balls per sec", { conveyorBallsPerSec }, null)
+		builder.addDoubleProperty("Loader balls per sec", { loaderBallsPerSec }, null)
 	}
 }

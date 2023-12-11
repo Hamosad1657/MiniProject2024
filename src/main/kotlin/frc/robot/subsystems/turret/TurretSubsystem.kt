@@ -9,6 +9,7 @@ import com.hamosad1657.lib.motors.HaTalonFX
 import com.hamosad1657.lib.units.compareTo
 import edu.wpi.first.math.filter.Debouncer
 import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
 import frc.robot.subsystems.turret.TurretConstants
@@ -65,5 +66,12 @@ object TurretSubsystem : SubsystemBase() {
 	fun withinTolerance(): Boolean {
 		val error = setpoint - currentAngle
 		return error.degrees <= abs(TurretConstants.TOLERANCE_DEGREES)
+	}
+
+	override fun initSendable(builder: SendableBuilder) {
+		builder.setSmartDashboardType("TurretSubsystem")
+		builder.addDoubleProperty("Robot-relative angle deg", { currentAngle.degrees }, null)
+		builder.addDoubleProperty("Encoder degrees", { encoder.position }, null)
+		builder.addBooleanProperty("Within Tolerance", ::withinTolerance, null)
 	}
 }
