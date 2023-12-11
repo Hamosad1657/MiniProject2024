@@ -14,8 +14,8 @@ fun ConveyorSubsystem.loadBallsWhenReadyToShootCommand(): Command {
 	}
 	return run {
 		if (readyToShootSupplier()) {
-			runConveyor(conveyorBallsPerSecs)
-			runLoader(loaderBallsPerSec)
+			runConveyor(ShooterSubsystem.ballsPerSecs)
+			runLoader(ShooterSubsystem.ballsPerSecs)
 		} else {
 			stopConveyor()
 			stopLoader()
