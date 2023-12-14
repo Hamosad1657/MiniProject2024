@@ -17,12 +17,12 @@ fun ConveyorSubsystem.loadBallsWhenReadyToShootCommand(): Command {
 			runConveyor(ShooterSubsystem.ballsPerSecs)
 			runLoader(ShooterSubsystem.ballsPerSecs)
 		} else {
-			stopConveyor()
 			stopLoader()
+			stopConveyor()
 		}
 	}.finallyDo {
-		stopConveyor()
 		stopLoader()
+		stopConveyor()
 	}
 }
 

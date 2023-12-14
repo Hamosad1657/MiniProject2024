@@ -11,7 +11,7 @@ import frc.robot.subsystems.hood.HoodSubsystem
 import frc.robot.subsystems.shooter.ShooterSubsystem
 import frc.robot.subsystems.turret.TurretSubsystem
 
-fun aimCommand(robotPositionSupplier: () -> Pose2d): Command {
+fun aimWithOdometryCommand(robotPositionSupplier: () -> Pose2d): Command {
 	return aimShooterAndHoodFromOdometryCommand(robotPositionSupplier)
 		.alongWith(TurretSubsystem.aimTurretCommand(robotPositionSupplier))
 }
@@ -35,6 +35,6 @@ fun getToStateCommand(stateSupplier: () -> HoodShooterState): Command {
 }
 
 fun aimAndLoadWhenAimedCommand(robotPositionSupplier: () -> Pose2d): Command {
-	return aimCommand(robotPositionSupplier)
+	return aimWithOdometryCommand(robotPositionSupplier)
 		.alongWith(ConveyorSubsystem.loadBallsWhenReadyToShootCommand())
 }
