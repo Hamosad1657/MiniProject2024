@@ -12,8 +12,21 @@ fun ConveyorSubsystem.loadBallsWhenReadyToShootCommand(): Command {
 			HoodSubsystem.withinTolerance() &&
 			TurretSubsystem.withinTolerance()
 	}
+	return loadWhenCondition(readyToShootSupplier)
+}
+
+fun ConveyorSubsystem.loadWhenShooterAndHoodReady(): Command {
+	val readyToShootSupplier = {
+		ShooterSubsystem.withinTolerance() &&
+			HoodSubsystem.withinTolerance()
+	}
+	return loadWhenCondition(readyToShootSupplier)
+}
+
+
+fun ConveyorSubsystem.loadWhenCondition(condition: () -> Boolean): Command {
 	return run {
-		if (readyToShootSupplier()) {
+		if (condition()) {
 			runConveyor(ShooterSubsystem.ballsPerSecs)
 			runLoader(ShooterSubsystem.ballsPerSecs)
 		} else {

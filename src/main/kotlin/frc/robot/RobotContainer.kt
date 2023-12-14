@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.*
+import frc.robot.subsystems.conveyor.ConveyorSubsystem
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.ShooterSubsystem
 import frc.robot.subsystems.swerve.SwerveSubsystem
@@ -42,6 +43,11 @@ object RobotContainer {
 				{ simpleDeadband(-commandControllerB.rightX, JOYSTICK_DEADBAND) })
 		)
 
+		// Aim shoot and load WITHOUT TURRET on square button
+		commandControllerB.square().onTrue(aimShooterAndHoodFromOdometryCommand { SwerveSubsystem.pose }
+			.alongWith(ConveyorSubsystem.loadWhenShooterAndHoodReady()))
+
+		// Turn turret to search for tags on options button
 		commandControllerB.options().onTrue(TurretSubsystem.searchForAnyTagCommand { Vision.currentBestTag })
 
 	}
