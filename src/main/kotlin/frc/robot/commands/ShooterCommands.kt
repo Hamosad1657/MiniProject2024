@@ -11,11 +11,13 @@ import kotlin.experimental.ExperimentalTypeInference
 @OptIn(ExperimentalTypeInference::class) // Can be done per method, class or file
 @OverloadResolutionByLambdaReturnType
 fun ShooterSubsystem.shootBallsCommand(ballsPerSecSupplier: () -> Double): Command {
-	val angularVelocitySupplier: () -> AngularVelocity = {
-		val rotationsPerSec = ballsPerSecSupplier() * ShooterConstants.SHOOTER_BALLS_PER_ROTATION
-		AngularVelocity.fromRps(rotationsPerSec)
+	return withName("ShootBalls") {
+		val angularVelocitySupplier: () -> AngularVelocity = {
+			val rotationsPerSec = ballsPerSecSupplier() * ShooterConstants.SHOOTER_BALLS_PER_ROTATION
+			AngularVelocity.fromRps(rotationsPerSec)
+		}
+		shootBallsCommand(angularVelocitySupplier)
 	}
-	return shootBallsCommand(angularVelocitySupplier)
 }
 
 fun ShooterSubsystem.shootBallsCommand(angularVelocitySupplier: () -> AngularVelocity): Command =

@@ -1,6 +1,7 @@
 package frc.robot.commands
 
 import com.hamosad1657.lib.commands.finallyDo
+import com.hamosad1657.lib.commands.withName
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.conveyor.ConveyorSubsystem
 import frc.robot.subsystems.hood.HoodSubsystem
@@ -8,33 +9,39 @@ import frc.robot.subsystems.shooter.ShooterSubsystem
 import frc.robot.subsystems.turret.TurretSubsystem
 
 fun ConveyorSubsystem.loadWhenReadyToShootCommand(): Command =
-	loadWhen {
-		ShooterSubsystem.withinTolerance() &&
-			HoodSubsystem.withinTolerance() &&
-			TurretSubsystem.withinTolerance()
+	withName("loadWhenReadyToShoot") {
+		loadWhen {
+			ShooterSubsystem.withinTolerance() &&
+				HoodSubsystem.withinTolerance() &&
+				TurretSubsystem.withinTolerance()
+		}
 	}
 
 
 fun ConveyorSubsystem.loadWhenShooterAndHoodReady(): Command =
-	loadWhen {
-		ShooterSubsystem.withinTolerance() &&
-			HoodSubsystem.withinTolerance()
+	withName("loadWhenHoodAndShooterReady") {
+		loadWhen {
+			ShooterSubsystem.withinTolerance() &&
+				HoodSubsystem.withinTolerance()
+		}
 	}
 
 
 fun ConveyorSubsystem.loadWhen(condition: () -> Boolean): Command {
-	return run {
-		if (condition()) {
-			val ballsPerSecs = ShooterSubsystem.ballsPerSecs
-			runConveyor(ballsPerSecs)
-			runLoader(ballsPerSecs)
-		} else {
+	return withName("loadWhen") {
+		run {
+			if (condition()) {
+				val ballsPerSecs = ShooterSubsystem.ballsPerSecs
+				runConveyor(ballsPerSecs)
+				runLoader(ballsPerSecs)
+			} else {
+				stopLoader()
+				stopConveyor()
+			}
+		} finallyDo {
 			stopLoader()
 			stopConveyor()
 		}
-	} finallyDo {
-		stopLoader()
-		stopConveyor()
 	}
 }
 
