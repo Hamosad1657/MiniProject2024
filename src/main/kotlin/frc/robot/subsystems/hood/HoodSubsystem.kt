@@ -9,6 +9,7 @@ import com.hamosad1657.lib.units.compareTo
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.DigitalInput
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
 import frc.robot.subsystems.hood.HoodConstants
@@ -20,6 +21,10 @@ import frc.robot.subsystems.hood.HoodConstants as Constants
 object HoodSubsystem : SubsystemBase() {
 	private val encoder = CANCoder(RobotMap.Hood.ENCODER_ID)
 	private val reverseLimitSwitch = DigitalInput(RobotMap.Hood.LIMIT_CHANNEL)
+
+	init {
+		SmartDashboard.putData(this)
+	}
 
 	private val motor = HaTalonFX(RobotMap.Hood.MOTOR_ID).apply {
 		configRemoteFeedbackFilter(encoder, 0)
@@ -54,6 +59,7 @@ object HoodSubsystem : SubsystemBase() {
 	}
 
 	override fun initSendable(builder: SendableBuilder) {
+		builder.setSmartDashboardType("HoodSubsystem")
 		builder.addDoubleProperty("Current Angle deg", { currentAngle.degrees }, null)
 		builder.addDoubleProperty("Encoder angle deg", { encoder.position }, null)
 		builder.addBooleanProperty("Within tolerance", ::withinTolerance, null)

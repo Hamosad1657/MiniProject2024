@@ -23,6 +23,7 @@ object IntakeSubsystem : SubsystemBase(), AutoCloseable {
 	}
 
 	override fun initSendable(builder: SendableBuilder) {
+		builder.setSmartDashboardType("IntakeSubsystem")
 		builder.addBooleanProperty("Running", { running }, null)
 	}
 

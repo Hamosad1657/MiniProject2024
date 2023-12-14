@@ -3,11 +3,17 @@ package frc.robot.subsystems.conveyor
 import com.hamosad1657.lib.motors.HaCANSparkMax
 import com.revrobotics.CANSparkMax.ControlType
 import edu.wpi.first.util.sendable.SendableBuilder
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
 import frc.robot.subsystems.conveyor.ConveyorConstants as Constants
 
 object ConveyorSubsystem : SubsystemBase() {
+
+	init {
+		SmartDashboard.putData(this)
+	}
+
 	private val loaderMotor = HaCANSparkMax(RobotMap.Conveyor.LOADER_MOTOR_ID)
 	private val loaderEncoder = loaderMotor.encoder
 	private val loaderPIDController = loaderMotor.pidController
@@ -41,6 +47,7 @@ object ConveyorSubsystem : SubsystemBase() {
 	}
 
 	override fun initSendable(builder: SendableBuilder) {
+		builder.setSmartDashboardType("ConveyorSubsystem")
 		builder.addDoubleProperty("Conveyor balls per sec", { conveyorBallsPerSec }, null)
 		builder.addDoubleProperty("Loader balls per sec", { loaderBallsPerSec }, null)
 	}
