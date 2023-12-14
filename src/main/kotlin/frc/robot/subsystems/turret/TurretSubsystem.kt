@@ -59,10 +59,17 @@ object TurretSubsystem : SubsystemBase() {
 		if (cornerX > Constants.CAMERA_WIDTH / 2.0) Constants.MAX_ANGLE else Constants.MIN_ANGLE
 
 	/**
-	 * Returns a tag of the specified [tagID] was for the last [Constants.TAG_DETECTION_TIME_SEC] seconds.
+	 * Returns is a tag of the specified [tagID] was detected for the last [Constants.TAG_DETECTION_TIME_SEC] seconds.
 	 */
 	fun isTagDetected(tagID: Int, trackedTarget: PhotonTrackedTarget?): Boolean {
 		return tagDetectionDebouncer.calculate(trackedTarget != null && trackedTarget.fiducialId == tagID)
+	}
+
+	/**
+	 * Returns if a tag was detected for the last [Constants.TAG_DETECTION_TIME_SEC] seconds.
+	 */
+	fun isAnyTagDetected(trackedTarget: PhotonTrackedTarget?): Boolean {
+		return tagDetectionDebouncer.calculate(trackedTarget != null)
 	}
 
 	fun withinTolerance(): Boolean {
