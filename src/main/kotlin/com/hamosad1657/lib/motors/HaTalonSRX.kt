@@ -2,9 +2,7 @@ package com.hamosad1657.lib.motors
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
-import com.hamosad1657.lib.math.PIDGains
-import com.hamosad1657.lib.math.clamp
-import com.hamosad1657.lib.math.wrapPositionSetpoint
+import com.hamosad1657.lib.math.*
 
 class HaTalonSRX(deviceID: Int) : WPI_TalonSRX(deviceID) {
 	init {
@@ -25,11 +23,11 @@ class HaTalonSRX(deviceID: Int) : WPI_TalonSRX(deviceID) {
 	 */
 	var reverseLimit: () -> Boolean = { false }
 
-	private var minPercentOutput = -1.0
+	var minPercentOutput = -1.0
 		set(value) {
 			field = value.coerceAtLeast(-1.0)
 		}
-	private var maxPercentOutput = 1.0
+	var maxPercentOutput = 1.0
 		set(value) {
 			field = value.coerceAtMost(1.0)
 		}
@@ -71,12 +69,16 @@ class HaTalonSRX(deviceID: Int) : WPI_TalonSRX(deviceID) {
 	override fun set(percentOutput: Double) {
 		require(maxPercentOutput >= minPercentOutput)
 		if ((forwardLimit() && percentOutput > 0.0) || (reverseLimit() && percentOutput < 0.0)) {
-			speed = 0.0
-			super.set(ControlMode.PercentOutput, 0.0)
+			this.stopMotor()
 		} else {
 			speed = clamp(percentOutput, minPercentOutput, maxPercentOutput)
 			super.set(ControlMode.PercentOutput, speed)
 		}
+	}
+
+	override fun stopMotor() {
+		this.speed = 0.0
+		super.stopMotor()
 	}
 
 	/**
