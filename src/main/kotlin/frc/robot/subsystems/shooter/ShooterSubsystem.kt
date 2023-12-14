@@ -11,7 +11,7 @@ import kotlin.math.abs
 import frc.robot.subsystems.shooter.ShooterConstants as Constants
 
 object ShooterSubsystem : SubsystemBase() {
-	val motor = HaTalonFX(RobotMap.Shooter.MOTOR_ID).apply {
+	private val motor = HaTalonFX(RobotMap.Shooter.MOTOR_ID).apply {
 		configPIDGains(Constants.PID_GAINS)
 	}
 

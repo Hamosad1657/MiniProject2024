@@ -7,7 +7,6 @@ import org.photonvision.*
 import org.photonvision.targeting.PhotonTrackedTarget
 
 object Vision {
-
 	val currentBestTag: PhotonTrackedTarget? = null
 
 	val aprilTags: AprilTagFieldLayout =

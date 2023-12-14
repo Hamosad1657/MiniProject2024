@@ -24,7 +24,7 @@ data class HoodShooterState(val hoodAngle: Rotation2d, val angularVelocity: Angu
 		/**
 		 * @param distanceToBoiler from shooter, get from vision.
 		 */
-		fun fromLength(distanceToBoiler: Length): HoodShooterState {
+		fun fromDistance(distanceToBoiler: Length): HoodShooterState {
 			val distance = distanceToBoiler.meters
 			val a = (-BOILER_Y - TURRET_HEIGHT + 2.0 * MAX_HEIGHT + 2.0 *
 				sqrt(MAX_HEIGHT.pow(2.0) + BOILER_Y * TURRET_HEIGHT - BOILER_Y * MAX_HEIGHT - TURRET_HEIGHT * MAX_HEIGHT)) /

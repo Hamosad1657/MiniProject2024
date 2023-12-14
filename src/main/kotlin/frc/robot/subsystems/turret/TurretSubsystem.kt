@@ -19,7 +19,7 @@ import kotlin.math.abs
 import frc.robot.subsystems.turret.TurretConstants as Constants
 
 object TurretSubsystem : SubsystemBase() {
-	val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID).apply {
+	private val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID).apply {
 		inverted = false // TODO: verify Turret motor is CCW positive
 		forwardLimit = { currentAngle >= Constants.MAX_ANGLE }
 		reverseLimit = { currentAngle <= Constants.MIN_ANGLE }
@@ -43,6 +43,10 @@ object TurretSubsystem : SubsystemBase() {
 	init {
 		SmartDashboard.putData(this)
 		getToAngle(Constants.MIN_ANGLE)
+	}
+
+	fun stopTurret() {
+		motor.stopMotor()
 	}
 
 	/**

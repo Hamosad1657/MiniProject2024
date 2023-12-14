@@ -22,7 +22,9 @@ fun TurretSubsystem.getToAngleCommand(desiredAngle: Rotation2d): Command {
 		} andThen waitUntil {
 			val error = wrap0to360(desiredAngle.degrees) - currentAngle.degrees
 			abs(error) <= Constants.TOLERANCE_DEGREES
-		} andThen runOnce(motor::stopMotor)
+		} finallyDo {
+			stopTurret()
+		}
 	}
 }
 
@@ -83,8 +85,8 @@ fun TurretSubsystem.trackTargetCommand(trackedTargetSupplier: () -> PhotonTracke
 				val desiredAngle = currentAngle - target.yaw.degrees
 				getToAngle(desiredAngle)
 			}
-		}.finallyDo {
-			motor.stopMotor()
+		} finallyDo {
+			stopTurret()
 		}
 	}
 }
