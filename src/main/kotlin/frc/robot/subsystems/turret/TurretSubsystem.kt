@@ -27,10 +27,6 @@ object TurretSubsystem : SubsystemBase() {
 		configPIDGains(Constants.PID_GAINS)
 	}
 
-	init {
-		SmartDashboard.putData(this)
-	}
-
 	private val encoder = WPI_CANCoder(RobotMap.Turret.CANCODER_ID).apply {
 		configSensorDirection(false) // TODO: verify Turret CANCoder is CCW positive
 		configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
@@ -45,6 +41,7 @@ object TurretSubsystem : SubsystemBase() {
 	private val tagDetectionDebouncer = Debouncer(Constants.TAG_DETECTION_TIME_SEC)
 
 	init {
+		SmartDashboard.putData(this)
 		getToAngle(Constants.MIN_ANGLE)
 	}
 

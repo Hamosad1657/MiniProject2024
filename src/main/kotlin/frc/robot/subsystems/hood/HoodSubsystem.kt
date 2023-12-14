@@ -22,10 +22,6 @@ object HoodSubsystem : SubsystemBase() {
 	private val encoder = CANCoder(RobotMap.Hood.ENCODER_ID)
 	private val reverseLimitSwitch = DigitalInput(RobotMap.Hood.LIMIT_CHANNEL)
 
-	init {
-		SmartDashboard.putData(this)
-	}
-
 	private val motor = HaTalonFX(RobotMap.Hood.MOTOR_ID).apply {
 		configRemoteFeedbackFilter(encoder, 0)
 		configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0)
@@ -39,6 +35,7 @@ object HoodSubsystem : SubsystemBase() {
 	init {
 		motor.forwardLimit = { currentAngle >= Constants.MAX_HOOD_ANGLE }
 		motor.reverseLimit = { reverseLimitSwitch.get() }
+		SmartDashboard.putData(this)
 	}
 
 	fun getToAngle(desiredAngle: Rotation2d) {

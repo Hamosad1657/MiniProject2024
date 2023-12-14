@@ -10,10 +10,6 @@ import frc.robot.subsystems.conveyor.ConveyorConstants as Constants
 
 object ConveyorSubsystem : SubsystemBase() {
 
-	init {
-		SmartDashboard.putData(this)
-	}
-
 	private val loaderMotor = HaCANSparkMax(RobotMap.Conveyor.LOADER_MOTOR_ID)
 	private val loaderEncoder = loaderMotor.encoder
 	private val loaderPIDController = loaderMotor.pidController
@@ -27,6 +23,10 @@ object ConveyorSubsystem : SubsystemBase() {
 
 	val loaderBallsPerSec: Double
 		get() = loaderEncoder.velocity * Constants.LOADER_VELOCITY_RATIO
+
+	init {
+		SmartDashboard.putData(this)
+	}
 
 	fun runConveyor(ballsPerSecs: Double) {
 		val setpointRPM = ballsPerSecs * Constants.CONVEYOR_VELOCITY_RATIO

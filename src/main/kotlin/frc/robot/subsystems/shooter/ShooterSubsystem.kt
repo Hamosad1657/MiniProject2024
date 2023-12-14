@@ -15,15 +15,15 @@ object ShooterSubsystem : SubsystemBase() {
 		configPIDGains(Constants.PID_GAINS)
 	}
 
-	init {
-		SmartDashboard.putData(this)
-	}
-
 	val ballsPerSecs: Double get() = angularVelocity.rps * Constants.SHOOTER_BALLS_PER_ROTATION
 
 	private val angularVelocity get() = AngularVelocity.fromFalconTicksPer100ms(motor.selectedSensorVelocity)
 
 	private var setpoint = AngularVelocity.fromRpm(0.0)
+
+	init {
+		SmartDashboard.putData(this)
+	}
 
 	fun getToVelocity(velocity: AngularVelocity) {
 		setpoint = velocity
@@ -43,6 +43,7 @@ object ShooterSubsystem : SubsystemBase() {
 		builder.setSmartDashboardType("ShooterSubsystem")
 		builder.addDoubleProperty("Balls per sec", { ballsPerSecs }, null)
 		builder.addDoubleProperty("Deg per sec", { angularVelocity.degPs }, null)
+		builder.addDoubleProperty("Setpoint deg per sec", { setpoint.degPs }, null)
 		builder.addBooleanProperty("Within tolerance", ::withinTolerance, null)
 	}
 }
