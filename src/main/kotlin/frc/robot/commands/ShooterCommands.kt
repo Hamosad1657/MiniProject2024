@@ -7,10 +7,12 @@ import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.shooter.ShooterConstants
 import frc.robot.subsystems.shooter.ShooterSubsystem
 
-fun ShooterSubsystem.shootBallsCommand(ballsPerSec: Double): Command {
-	val rotationsPerSec = ballsPerSec * ShooterConstants.SHOOTER_BALLS_PER_ROTATION
-	val angularVelocity = AngularVelocity.fromRps(rotationsPerSec)
-	return shootBallsCommand { angularVelocity }
+fun ShooterSubsystem.shootBallsCommand(ballsPerSecSupplier: () -> Double): Command {
+	val angularVelocitySupplier: () -> AngularVelocity = {
+		val rotationsPerSec = ballsPerSecSupplier() * ShooterConstants.SHOOTER_BALLS_PER_ROTATION
+		AngularVelocity.fromRps(rotationsPerSec)
+	}
+	return shootBallsCommand(angularVelocitySupplier)
 }
 
 fun ShooterSubsystem.shootBallsCommand(angularVelocitySupplier: () -> AngularVelocity): Command =
