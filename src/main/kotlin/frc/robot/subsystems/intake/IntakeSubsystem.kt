@@ -18,7 +18,8 @@ object IntakeSubsystem : SubsystemBase(), AutoCloseable {
 		get() = motor.get() != 0.0
 
 	init {
-		SmartDashboard.putData("Intake", this)
+		name = "IntakeSubsystem"
+		SmartDashboard.putData(this)
 	}
 
 	override fun initSendable(builder: SendableBuilder) {
