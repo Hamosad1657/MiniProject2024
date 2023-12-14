@@ -55,6 +55,14 @@ fun TurretSubsystem.searchForTagCommand(tagID: Int, trackedTargetSupplier: () ->
 	}
 }
 
+fun TurretSubsystem.searchForAnyTagCommand(trackedTargetSupplier: () -> PhotonTrackedTarget?): Command {
+	return withName("searchForAnyTagCommand") {
+		(fullTurnCommand() andThen fullTurnCommand()) until {
+			isAnyTagDetected(trackedTargetSupplier())
+		}
+	}
+}
+
 fun TurretSubsystem.trackTargetCommand(trackedTargetSupplier: () -> PhotonTrackedTarget?): Command {
 	var currentTurnAngle: Rotation2d? = null
 	var lastTargetLeftCornerX: Double? = null
