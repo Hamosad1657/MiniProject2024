@@ -2,7 +2,7 @@ package frc.robot.subsystems.turret
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.sensors.AbsoluteSensorRange
-import com.ctre.phoenix.sensors.CANCoder
+import com.ctre.phoenix.sensors.WPI_CANCoder
 import com.hamosad1657.lib.math.clamp
 import com.hamosad1657.lib.math.wrap0to360
 import com.hamosad1657.lib.motors.HaTalonFX
@@ -26,7 +26,7 @@ object TurretSubsystem : SubsystemBase() {
 		configPIDGains(Constants.PID_GAINS)
 	}
 
-	private val encoder = CANCoder(RobotMap.Turret.CANCODER_ID).apply {
+	private val encoder = WPI_CANCoder(RobotMap.Turret.CANCODER_ID).apply {
 		configSensorDirection(false) // TODO: verify Turret CANCoder is CCW positive
 		configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
 	}
