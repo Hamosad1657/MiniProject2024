@@ -33,14 +33,15 @@ object ConveyorSubsystem : SubsystemBase() {
 		conveyorPIDController.setReference(setpointRPM, ControlType.kVelocity)
 	}
 
+	fun stopConveyor() {
+		conveyorMotor.stopMotor()
+	}
+
 	fun runLoader(ballsPerSecs: Double) {
 		val setpointRPM = ballsPerSecs * Constants.LOADER_VELOCITY_RATIO
 		loaderPIDController.setReference(setpointRPM, ControlType.kVelocity)
 	}
 
-	fun stopConveyor() {
-		conveyorMotor.stopMotor()
-	}
 
 	fun stopLoader() {
 		loaderMotor.stopMotor()

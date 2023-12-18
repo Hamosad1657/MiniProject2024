@@ -11,7 +11,6 @@ import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.ShooterSubsystem
 import frc.robot.subsystems.swerve.SwerveSubsystem
 import frc.robot.subsystems.turret.TurretSubsystem
-import frc.robot.subsystems.vision.Vision
 
 object RobotContainer {
 	const val JOYSTICK_DEADBAND = 0.1
@@ -44,11 +43,11 @@ object RobotContainer {
 		)
 
 		// Aim shoot and load WITHOUT TURRET on square button
-		commandControllerB.square().onTrue(aimShooterAndHoodFromOdometryCommand { SwerveSubsystem.pose }
+		commandControllerB.square().onTrue(aimShooterAndHoodCommand { SwerveSubsystem.pose }
 			.alongWith(ConveyorSubsystem.loadWhenShooterAndHoodReady()))
 
 		// Turn turret to search for tags on options button
-		commandControllerB.options().onTrue(TurretSubsystem.searchForAnyTagCommand { Vision.currentBestTag })
+		commandControllerB.options().onTrue(TurretSubsystem.searchForAnyTagCommand())
 
 	}
 
