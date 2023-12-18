@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions.*
  * Example test just to learn how this works.
  */
 
-class IntakeTest {
+class IntakeTests {
 	val DELTA = 1e-2 // Copied from WPILib's example
 
 	@BeforeEach

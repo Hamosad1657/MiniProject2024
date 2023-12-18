@@ -10,10 +10,11 @@ object ShooterConstants {
 
 	const val SHOOTER_BALLS_PER_ROTATION = 0.0
 
+	// TODOFind the correct values
 	object Calculations {
-		const val BOILER_Y = 0.0
-		const val TURRET_HEIGHT = 0.0
-		const val MAX_HEIGHT = 0.0
+		const val BOILER_Y = 2.59
+		const val TURRET_HEIGHT = 0.711
+		const val MAX_HEIGHT = 3.0
 		val WHEEL_RADIUS = 20.centimeters
 		const val G = 9.81
 	}

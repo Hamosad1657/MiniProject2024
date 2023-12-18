@@ -1,14 +1,17 @@
 package com.hamosad1657.lib.math
 
 import edu.wpi.first.math.MathUtil
-import kotlin.math.abs
-import kotlin.math.ceil
-import kotlin.math.floor
+import kotlin.math.*
 
 /**
  * Wraps [angleDeg] to a range of [0-360] degrees.
  */
 fun wrap0to360(angleDeg: Double): Double = MathUtil.inputModulus(angleDeg, 0.0, 360.0)
+
+/**
+ * Round the number with [precision] digits after the dot.
+ */
+fun Double.roundWithPrecision(precision: Int) = round(this * 10.0.pow(precision)) / 10.0.pow(precision)
 
 /**
  * If the absolute value is smaller than the deadband, the value becomes 0.
@@ -45,11 +48,9 @@ fun continuousDeadband(value: Double, deadband: Double): Double {
 
 	return if (value > deadband) {
 		mapRange(value, deadband, 1.0, 0.0, 1.0)
-	}
-	else if (value < -deadband) {
+	} else if (value < -deadband) {
 		mapRange(value, -1.0, -deadband, -1.0, 0.0)
-	}
-	else {
+	} else {
 		0.0
 	}
 }
@@ -78,12 +79,13 @@ fun mapRange(value: Double, startMin: Double, startMax: Double, endMin: Double, 
  * @return The value relative to the end range.
  */
 fun mapRange(value: Int, startMin: Int, startMax: Int, endMin: Int, endMax: Int): Int {
-	return mapRange(value.toDouble(),
-					startMin.toDouble(),
-					startMax.toDouble(),
-					endMin.toDouble(),
-					endMax.toDouble()
-					).toInt()
+	return mapRange(
+		value.toDouble(),
+		startMin.toDouble(),
+		startMax.toDouble(),
+		endMin.toDouble(),
+		endMax.toDouble()
+	).toInt()
 }
 
 fun median(collection: Collection<Double>): Double {
@@ -168,6 +170,7 @@ fun wrapPositionSetpoint(
 
 	val modifiedSetpoint = modifiedError + wrappedMeasurement // same as [error = setpoint - measurement]
 
-	val fullRotationsFromZero = if(measurement < minMeasurement) ceil(measurement / ticksInRotation) else floor(measurement / ticksInRotation)
+	val fullRotationsFromZero =
+		if (measurement < minMeasurement) ceil(measurement / ticksInRotation) else floor(measurement / ticksInRotation)
 	return modifiedSetpoint + fullRotationsFromZero * ticksInRotation
 }
