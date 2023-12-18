@@ -25,6 +25,10 @@ object HoodSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Hood.MOTOR_ID).apply {
 		configRemoteFeedbackFilter(encoder, 0)
 		configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0)
+		configForwardSoftLimitThreshold((Constants.MAX_HOOD_ANGLE * Constants.GEAR_RATIO_ENCODER_TO_HOOD).degrees)
+		configForwardSoftLimitThreshold((Constants.MAX_HOOD_ANGLE * Constants.GEAR_RATIO_ENCODER_TO_HOOD).degrees)
+		configForwardSoftLimitEnable(true)
+		configReverseSoftLimitEnable(true)
 		configPIDGains(Constants.PID_GAINS)
 	}
 

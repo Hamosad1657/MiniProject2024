@@ -6,24 +6,22 @@ import com.ctre.phoenix.sensors.WPI_CANCoder
 import com.hamosad1657.lib.math.clamp
 import com.hamosad1657.lib.math.wrap0to360
 import com.hamosad1657.lib.motors.HaTalonFX
-import com.hamosad1657.lib.units.compareTo
-import edu.wpi.first.math.filter.Debouncer
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
 import frc.robot.subsystems.turret.TurretConstants
-import org.photonvision.targeting.PhotonTrackedTarget
 import kotlin.math.abs
 import frc.robot.subsystems.turret.TurretConstants as Constants
 
 object TurretSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID).apply {
 		inverted = false // TODO: verify Turret motor is CCW positive
-		forwardLimit = { currentAngle >= Constants.MAX_ANGLE }
-		reverseLimit = { currentAngle <= Constants.MIN_ANGLE }
-
+		configForwardSoftLimitThreshold((Constants.MAX_ANGLE * Constants.GEAR_RATIO_ENCODER_TO_TURRET).degrees)
+		configReverseSoftLimitThreshold((Constants.MAX_ANGLE * Constants.GEAR_RATIO_ENCODER_TO_TURRET).degrees)
+		configForwardSoftLimitEnable(true)
+		configReverseSoftLimitEnable(true)
 		configPIDGains(Constants.PID_GAINS)
 	}
 
