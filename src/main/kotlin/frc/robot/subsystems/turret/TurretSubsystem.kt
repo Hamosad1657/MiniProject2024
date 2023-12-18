@@ -19,7 +19,7 @@ object TurretSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID).apply {
 		inverted = false // TODO: verify Turret motor is CCW positive
 		configForwardSoftLimitThreshold((Constants.MAX_ANGLE * Constants.GEAR_RATIO_ENCODER_TO_TURRET).degrees)
-		configReverseSoftLimitThreshold((Constants.MAX_ANGLE * Constants.GEAR_RATIO_ENCODER_TO_TURRET).degrees)
+		configReverseSoftLimitThreshold((Constants.MIN_ANGLE * Constants.GEAR_RATIO_ENCODER_TO_TURRET).degrees)
 		configForwardSoftLimitEnable(true)
 		configReverseSoftLimitEnable(true)
 		configPIDGains(Constants.PID_GAINS)
