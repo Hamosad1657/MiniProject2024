@@ -46,6 +46,7 @@ class HaDebouncer(debounceTimeMilliseconds: Double) : Sendable {
 
 	/**
 	 * Debounce rising edge (false to true) only.
+	 * True to false changes immediately.
 	 *
 	 * This function must be called periodically with the updated value.
 	 */
@@ -57,6 +58,7 @@ class HaDebouncer(debounceTimeMilliseconds: Double) : Sendable {
 
 	/**
 	 * Debounce falling edge (true to false) only.
+	 * False to true changes immediately.
 	 *
 	 * This function must be called periodically with the updated value.
 	 */
