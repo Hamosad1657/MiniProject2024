@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer
 class HaDebouncer(debounceTimeMilliseconds: Double) : Sendable {
 	var debounceTimeMilliseconds = debounceTimeMilliseconds
 		set(value) {
-			require(value >= 0.0) {"debounceTimeMilliseconds cannot be negative."}
+			require(value >= 0.0) { "debounceTimeMilliseconds cannot be negative." }
 			field = value
 		}
 	private val timer = Timer()
@@ -31,15 +31,14 @@ class HaDebouncer(debounceTimeMilliseconds: Double) : Sendable {
 	 * This function must be called periodically with the updated value.
 	 */
 	fun debounce(newValue: Boolean): Boolean {
-		require(debounceTimeMilliseconds >= 0.0) {"Debounce time cannot be negative."}
+		require(debounceTimeMilliseconds >= 0.0) { "Debounce time cannot be negative." }
 
-		if(previousInput == null) { // Will only be null on first call to debounce
+		if (previousInput == null) { // Will only be null on first call to debounce
 			previousInput = newValue
 			output = newValue
 			timer.start()
-		}
-		else if(previousInput != newValue) timer.reset()
-		else if(timer.hasElapsed(debounceTimeMilliseconds)) output = newValue
+		} else if (previousInput != newValue) timer.reset()
+		else if (timer.hasElapsed(debounceTimeMilliseconds / 1000.0)) output = newValue
 
 		previousInput = newValue
 		return output!!
@@ -51,7 +50,7 @@ class HaDebouncer(debounceTimeMilliseconds: Double) : Sendable {
 	 * This function must be called periodically with the updated value.
 	 */
 	fun debounceRisingEdge(newValue: Boolean): Boolean {
-		output = if(newValue) debounce(true) else false
+		output = if (newValue) debounce(true) else false
 		previousInput = newValue
 		return output!!
 	}
@@ -62,7 +61,7 @@ class HaDebouncer(debounceTimeMilliseconds: Double) : Sendable {
 	 * This function must be called periodically with the updated value.
 	 */
 	fun debounceFallingEdge(newValue: Boolean): Boolean {
-		output = if(!newValue) debounce(false) else true
+		output = if (!newValue) debounce(false) else true
 		previousInput = newValue
 		return output!!
 	}
@@ -78,18 +77,18 @@ class HaDebouncer(debounceTimeMilliseconds: Double) : Sendable {
 
 	override fun toString(): String {
 		return ("Last value: $previousInput\n" +
-				"Time ms since change: ${timer.get() * 1000.0}\n" +
-				"Debounce time ms: $debounceTimeMilliseconds")
+			"Time ms since change: ${timer.get() * 1000.0}\n" +
+			"Debounce time ms: $debounceTimeMilliseconds")
 	}
 
 	override fun initSendable(builder: SendableBuilder) {
 		builder.setSmartDashboardType("HaDebouncer")
-		builder.addBooleanProperty("LastInput", {previousInput ?: false}, null)
-		builder.addDoubleProperty("TimeSinceChangeMS", {timer.get() * 1000.0}, null)
+		builder.addBooleanProperty("LastInput", { previousInput ?: false }, null)
+		builder.addDoubleProperty("TimeSinceChangeMS", { timer.get() * 1000.0 }, null)
 		builder.addDoubleProperty(
-				"DebounceTimeMilliseconds",
-				{debounceTimeMilliseconds},
-				{ms: Double -> debounceTimeMilliseconds = ms}
+			"DebounceTimeMilliseconds",
+			{ debounceTimeMilliseconds },
+			{ ms: Double -> debounceTimeMilliseconds = ms }
 		)
 	}
 }
