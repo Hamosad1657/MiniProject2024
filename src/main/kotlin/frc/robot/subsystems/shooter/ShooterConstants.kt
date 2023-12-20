@@ -10,7 +10,9 @@ object ShooterConstants {
 
 	const val SHOOTER_BALLS_PER_ROTATION = 0.0
 
-	// TODOFind the correct values
+	val MAX_VELOCITY = AngularVelocity.fromRpm(6300.0) // Falcon free speed is 6380 according to Vex, I rounded it down
+
+	// TODO Find the correct values
 	object Calculations {
 		const val BOILER_Y = 2.59
 		const val TURRET_HEIGHT = 0.711
