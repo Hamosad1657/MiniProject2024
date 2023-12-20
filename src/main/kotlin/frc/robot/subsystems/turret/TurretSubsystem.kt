@@ -9,6 +9,7 @@ import com.hamosad1657.lib.motors.HaTalonFX
 import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.util.sendable.SendableBuilder
+import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotMap
@@ -23,6 +24,7 @@ object TurretSubsystem : SubsystemBase() {
 		configReverseSoftLimitThreshold((Constants.MIN_ANGLE * Constants.GEAR_RATIO_ENCODER_TO_TURRET).degrees)
 		configForwardSoftLimitEnable(true)
 		configReverseSoftLimitEnable(true)
+
 		configPIDGains(Constants.PID_GAINS)
 	}
 
@@ -31,11 +33,17 @@ object TurretSubsystem : SubsystemBase() {
 		configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
 	}
 
+	private val CWLimit = DigitalInput(RobotMap.Turret.CW_LIMIT_PORT)
+	private val CCWLimit = DigitalInput(RobotMap.Turret.CCW_LIMIT_PORT)
+
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
 	val currentAngle: Rotation2d get() = Rotation2d.fromDegrees(encoder.position * Constants.GEAR_RATIO_ENCODER_TO_TURRET)
 	val farthestTurnAngle get() = if (currentAngle.degrees >= 180) Constants.MIN_ANGLE else Constants.MAX_ANGLE
 
 	private var setpoint = Rotation2d()
+
+	private val error
+		get() = setpoint - currentAngle
 
 	init {
 		SmartDashboard.putData(this)
@@ -57,15 +65,24 @@ object TurretSubsystem : SubsystemBase() {
 		this.setpoint = clampedDesiredAngleDeg.degrees
 
 		val setpointDeg = clampedDesiredAngleDeg / Constants.GEAR_RATIO_ENCODER_TO_TURRET
-		motor.set(ControlMode.Position, setpointDeg)
+		setWithLimits(ControlMode.Position, setpointDeg)
 	}
 
 	fun guessTurnAngleFromTargetCorner(cornerX: Double) =
 		if (cornerX > Constants.CAMERA_WIDTH / 2.0) Constants.MAX_ANGLE else Constants.MIN_ANGLE
 
 	fun withinTolerance(): Boolean {
-		val error = setpoint - currentAngle
 		return abs(error.degrees) <= TurretConstants.TOLERANCE_DEGREES
+	}
+
+	private fun setWithLimits(controlMode: ControlMode, value: Double) {
+		if (error.degrees > 0.0 && !CCWLimit.get() ||
+			error.degrees < 0.0 && !CWLimit.get()
+		) { // Switch is wired normally true
+			motor.stopMotor()
+		} else {
+			motor.set(controlMode, value)
+		}
 	}
 
 	override fun initSendable(builder: SendableBuilder) {
@@ -74,4 +91,6 @@ object TurretSubsystem : SubsystemBase() {
 		builder.addDoubleProperty("Encoder degrees", { encoder.position }, null)
 		builder.addBooleanProperty("Within Tolerance", ::withinTolerance, null)
 	}
+
+
 }

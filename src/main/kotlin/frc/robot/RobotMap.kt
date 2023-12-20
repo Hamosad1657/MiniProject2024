@@ -7,6 +7,8 @@ object RobotMap {
 	object Turret {
 		const val MOTOR_ID = 0
 		const val CANCODER_ID = 0
+		const val CW_LIMIT_PORT = 0
+		const val CCW_LIMIT_PORT = 0
 	}
 
 	object Shooter {
