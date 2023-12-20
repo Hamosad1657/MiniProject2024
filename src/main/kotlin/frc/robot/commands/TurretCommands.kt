@@ -18,9 +18,9 @@ import frc.robot.subsystems.turret.TurretConstants as Constants
  */
 fun TurretSubsystem.getToAngleCommand(desiredAngle: Rotation2d): Command {
 	return withName("getToAngle") {
-		runOnce {
+		run {
 			getToAngle(desiredAngle)
-		} andThen waitUntil {
+		} until {
 			val error = wrap0to360(desiredAngle.degrees) - currentAngle.degrees
 			abs(error) <= Constants.TOLERANCE_DEGREES
 		} finallyDo {
