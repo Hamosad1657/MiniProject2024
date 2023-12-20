@@ -33,8 +33,8 @@ object TurretSubsystem : SubsystemBase() {
 		configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
 	}
 
-	private val CWLimit = DigitalInput(RobotMap.Turret.CW_LIMIT_PORT)
-	private val CCWLimit = DigitalInput(RobotMap.Turret.CCW_LIMIT_PORT)
+	private val CWLimit = DigitalInput(RobotMap.Turret.CW_LIMIT_CHANNEL)
+	private val CCWLimit = DigitalInput(RobotMap.Turret.CCW_LIMIT_CHANNEL)
 
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
 	val currentAngle: Rotation2d get() = Rotation2d.fromDegrees(encoder.position * Constants.GEAR_RATIO_ENCODER_TO_TURRET)
