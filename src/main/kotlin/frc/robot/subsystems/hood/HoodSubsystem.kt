@@ -1,7 +1,6 @@
 package frc.robot.subsystems.hood
 
-import com.ctre.phoenix.motorcontrol.ControlMode
-import com.ctre.phoenix.motorcontrol.FeedbackDevice
+import com.ctre.phoenix.motorcontrol.*
 import com.ctre.phoenix.sensors.AbsoluteSensorRange
 import com.ctre.phoenix.sensors.WPI_CANCoder
 import com.hamosad1657.lib.math.clamp
@@ -31,6 +30,7 @@ object HoodSubsystem : SubsystemBase() {
 		configForwardSoftLimitEnable(true)
 		configReverseSoftLimitEnable(true)
 		configPIDGains(Constants.PID_GAINS)
+		setNeutralMode(NeutralMode.Brake)
 	}
 
 	private val encoder = WPI_CANCoder(RobotMap.Hood.ENCODER_ID).apply {
