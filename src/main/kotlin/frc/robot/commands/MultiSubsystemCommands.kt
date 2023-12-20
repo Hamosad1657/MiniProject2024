@@ -28,7 +28,6 @@ fun getToStateCommand(stateSupplier: () -> HoodShooterState): Command =
 	} alongWith HoodSubsystem.getToAngleCommand {
 		stateSupplier().hoodAngle
 	} finallyDo {
-		ShooterSubsystem.stopShooter()
 		HoodSubsystem.stopCommand()
 	}
 

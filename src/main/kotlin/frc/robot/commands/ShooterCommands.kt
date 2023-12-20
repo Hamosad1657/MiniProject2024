@@ -1,6 +1,5 @@
 package frc.robot.commands
 
-import com.hamosad1657.lib.commands.finallyDo
 import com.hamosad1657.lib.commands.withName
 import com.hamosad1657.lib.units.AngularVelocity
 import edu.wpi.first.wpilibj2.command.Command
@@ -25,8 +24,6 @@ fun ShooterSubsystem.shootBallsCommand(angularVelocitySupplier: () -> AngularVel
 	withName("shootBalls") {
 		run {
 			getToVelocity(angularVelocitySupplier())
-		} finallyDo {
-			stopShooter()
 		}
 	}
 
