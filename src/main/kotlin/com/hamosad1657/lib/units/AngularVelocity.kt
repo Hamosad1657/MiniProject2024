@@ -1,5 +1,7 @@
 package com.hamosad1657.lib.units
 
+import com.hamosad1657.lib.math.clamp
+
 /** Represents an angular velocity.
  *
  * Can be created from or converted to any of the following units:
@@ -85,5 +87,9 @@ private constructor(velocity: Double, velocityUnit: Unit) : Comparable<AngularVe
 		fun fromMps(mps: Double, wheelRadius: Length) = fromRpm(mpsToRpm(mps, wheelRadius))
 		fun fromFalconTicksPer100ms(ticksPer100ms: Double, gearRatio: Double = 1.0) =
 			fromRpm(falconTicksPer100msToRpm(ticksPer100ms, gearRatio))
+
+		fun clamp(value: AngularVelocity, min: AngularVelocity, max: AngularVelocity): AngularVelocity {
+			return clamp(value.rpm, min.rpm, max.rpm).rpm
+		}
 	}
 }
