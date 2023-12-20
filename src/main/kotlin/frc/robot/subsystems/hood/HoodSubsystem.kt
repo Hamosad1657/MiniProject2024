@@ -66,6 +66,7 @@ object HoodSubsystem : SubsystemBase() {
 	}
 
 	fun stopHood() {
+		setpoint = currentAngle
 		motor.stopMotor()
 	}
 
@@ -78,7 +79,7 @@ object HoodSubsystem : SubsystemBase() {
 		if (error.degrees > 0.0 && isAtTopLimit ||
 			error.degrees < 0.0 && isAtBottomLimit
 		) { // Switches are wired normally true
-			motor.stopMotor()
+			stopHood()
 		} else {
 			motor.set(controlMode, value)
 		}
