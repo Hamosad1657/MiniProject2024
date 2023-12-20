@@ -1,7 +1,6 @@
 package frc.robot.commands
 
 import com.hamosad1657.lib.commands.*
-import com.hamosad1657.lib.math.wrap0to360
 import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
@@ -10,7 +9,6 @@ import frc.robot.mechanisms.BOILER_LOCATION
 import frc.robot.subsystems.turret.TurretSubsystem
 import frc.robot.subsystems.vision.Vision
 import org.photonvision.targeting.PhotonTrackedTarget
-import kotlin.math.abs
 import frc.robot.subsystems.turret.TurretConstants as Constants
 
 /**
@@ -21,8 +19,7 @@ fun TurretSubsystem.getToAngleCommand(desiredAngle: Rotation2d): Command {
 		run {
 			getToAngle(desiredAngle)
 		} until {
-			val error = wrap0to360(desiredAngle.degrees) - currentAngle.degrees
-			abs(error) <= Constants.TOLERANCE_DEGREES
+			withinTolerance()
 		} finallyDo {
 			stopTurret()
 		}
