@@ -32,7 +32,6 @@ fun TurretSubsystem.getToAngleCommand(desiredAngle: Rotation2d): Command {
 fun TurretSubsystem.aimTurretCommand(robotPositionSupplier: () -> Pose2d): Command {
 	return withName("getToAngle") {
 		run {
-			// TODO: Someone else check this
 			val robotToBoilerTranslation = robotPositionSupplier().translation.minus(BOILER_LOCATION)
 			val robotToBoilerAngle = robotToBoilerTranslation.angle
 			val turretToBoilerAngle = robotToBoilerAngle + currentAngle
