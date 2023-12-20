@@ -10,6 +10,13 @@ object HoodConstants {
 
 	const val GEAR_RATIO_ENCODER_TO_HOOD = 0.0
 
+	/**
+	 * Lowest hood angle
+	 */
 	val MIN_HOOD_ANGLE = 0.0.degrees
+
+	/**
+	 * Highest hood angle
+	 */
 	val MAX_HOOD_ANGLE = 180.0.degrees
 }

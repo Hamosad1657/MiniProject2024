@@ -7,8 +7,8 @@ object RobotMap {
 	object Turret {
 		const val MOTOR_ID = 0
 		const val CANCODER_ID = 0
-		const val CW_LIMIT_PORT = 0
-		const val CCW_LIMIT_PORT = 0
+		const val CW_LIMIT_CHANNEL = 0
+		const val CCW_LIMIT_CHANNEL = 0
 	}
 
 	object Shooter {
@@ -17,7 +17,8 @@ object RobotMap {
 
 	object Hood {
 		const val MOTOR_ID = 0
-		const val LIMIT_CHANNEL = 0
+		const val BOTTOM_LIMIT_CHANNEL = 0
+		const val TOP_LIMIT_CHANNEL = 0
 		const val ENCODER_ID = 0
 	}
 
