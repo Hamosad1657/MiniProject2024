@@ -31,9 +31,9 @@ fun ConveyorSubsystem.loadWhen(condition: () -> Boolean): Command {
 	return withName("loadWhen") {
 		run {
 			if (condition()) {
-				val ballsPerSecs = ShooterSubsystem.ballsPerSecs
-				runConveyor(ballsPerSecs)
-				runLoader(ballsPerSecs)
+				val ballsPerSec = ShooterSubsystem.ballsPerSec
+				runConveyor(ballsPerSec)
+				runLoader(ballsPerSec)
 			} else {
 				stopLoader()
 				stopConveyor()
