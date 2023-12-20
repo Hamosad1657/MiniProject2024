@@ -36,7 +36,7 @@ object ShooterSubsystem : SubsystemBase() {
 
 	fun withinTolerance(): Boolean {
 		val error = setpoint - angularVelocity
-		return error.rpm <= abs(Constants.VELOCITY_TOLERANCE.rpm)
+		return abs(error.rpm) <= Constants.VELOCITY_TOLERANCE.rpm
 	}
 
 	override fun initSendable(builder: SendableBuilder) {

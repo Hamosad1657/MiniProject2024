@@ -56,7 +56,7 @@ object HoodSubsystem : SubsystemBase() {
 
 	fun withinTolerance(): Boolean {
 		val error = setpoint - currentAngle
-		return error.degrees <= abs(HoodConstants.ANGLE_TOLERANCE.degrees)
+		return abs(error.degrees) <= HoodConstants.ANGLE_TOLERANCE.degrees
 	}
 
 	override fun initSendable(builder: SendableBuilder) {

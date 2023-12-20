@@ -60,7 +60,7 @@ object TurretSubsystem : SubsystemBase() {
 
 	fun withinTolerance(): Boolean {
 		val error = setpoint - currentAngle
-		return error.degrees <= abs(TurretConstants.TOLERANCE_DEGREES)
+		return abs(error.degrees) <= TurretConstants.TOLERANCE_DEGREES
 	}
 
 	override fun initSendable(builder: SendableBuilder) {
