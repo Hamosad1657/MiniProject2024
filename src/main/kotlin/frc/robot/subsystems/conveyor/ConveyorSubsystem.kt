@@ -1,6 +1,7 @@
 package frc.robot.subsystems.conveyor
 
 import com.hamosad1657.lib.motors.HaCANSparkMax
+import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMax.ControlType
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -12,12 +13,14 @@ object ConveyorSubsystem : SubsystemBase() {
 
 	private val loaderMotor = HaCANSparkMax(RobotMap.Conveyor.LOADER_MOTOR_ID).apply {
 		inverted = false // TODO: verify positive output is loading and not unloading
+		idleMode = CANSparkMax.IdleMode.kBrake
 	}
 	private val loaderEncoder = loaderMotor.encoder
 	private val loaderPIDController = loaderMotor.pidController
 
 	private val conveyorMotor = HaCANSparkMax(RobotMap.Conveyor.CONVEYOR_MOTOR_ID).apply {
 		inverted = false // TODO: verify positive output is loading and not unloading
+		idleMode = CANSparkMax.IdleMode.kBrake
 	}
 	private val conveyorEncoder = conveyorMotor.encoder
 	private val conveyorPIDController = conveyorMotor.pidController
