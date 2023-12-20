@@ -60,6 +60,7 @@ object TurretSubsystem : SubsystemBase() {
 	}
 
 	fun stopTurret() {
+		setpoint = currentAngle
 		motor.stopMotor()
 	}
 
@@ -88,7 +89,7 @@ object TurretSubsystem : SubsystemBase() {
 		if (error.degrees > 0.0 && isAtCCWLimit ||
 			error.degrees < 0.0 && isAtCWLimit
 		) { // Switch is wired normally true
-			motor.stopMotor()
+			stopTurret()
 		} else {
 			motor.set(controlMode, value)
 		}
