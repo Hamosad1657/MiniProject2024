@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.NeutralMode
 import com.hamosad1657.lib.motors.HaTalonFX
 import com.hamosad1657.lib.units.AngularVelocity
+import com.hamosad1657.lib.units.rpm
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -39,6 +40,7 @@ object ShooterSubsystem : SubsystemBase() {
 	}
 
 	fun stopShooter() {
+		setpoint = 0.0.rpm
 		motor.stopMotor()
 	}
 
