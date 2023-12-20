@@ -12,6 +12,7 @@ import frc.robot.subsystems.shooter.ShooterConstants as Constants
 
 object ShooterSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Shooter.MOTOR_ID).apply {
+		inverted = false // TODO: verify positive output is shooting
 		configPIDGains(Constants.PID_GAINS)
 	}
 

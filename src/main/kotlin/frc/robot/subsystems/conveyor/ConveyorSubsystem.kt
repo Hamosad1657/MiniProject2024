@@ -10,11 +10,15 @@ import frc.robot.subsystems.conveyor.ConveyorConstants as Constants
 
 object ConveyorSubsystem : SubsystemBase() {
 
-	private val loaderMotor = HaCANSparkMax(RobotMap.Conveyor.LOADER_MOTOR_ID)
+	private val loaderMotor = HaCANSparkMax(RobotMap.Conveyor.LOADER_MOTOR_ID).apply {
+		inverted = false // TODO: verify positive output is loading and not unloading
+	}
 	private val loaderEncoder = loaderMotor.encoder
 	private val loaderPIDController = loaderMotor.pidController
 
-	private val conveyorMotor = HaCANSparkMax(RobotMap.Conveyor.CONVEYOR_MOTOR_ID)
+	private val conveyorMotor = HaCANSparkMax(RobotMap.Conveyor.CONVEYOR_MOTOR_ID).apply {
+		inverted = false // TODO: verify positive output is loading and not unloading
+	}
 	private val conveyorEncoder = conveyorMotor.encoder
 	private val conveyorPIDController = conveyorMotor.pidController
 

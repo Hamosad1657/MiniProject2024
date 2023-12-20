@@ -9,7 +9,9 @@ import frc.robot.subsystems.intake.IntakeConstants as Constants
 
 object IntakeSubsystem : SubsystemBase(), AutoCloseable {
 
-	private val motor = HaTalonFX(RobotMap.Intake.MOTOR_ID)
+	private val motor = HaTalonFX(RobotMap.Intake.MOTOR_ID).apply {
+		inverted = false // TODO: verify positive output is collecting
+	}
 
 	fun collect() = motor.set(Constants.MOTOR_OUTPUT)
 	fun stop() = motor.stopMotor()
