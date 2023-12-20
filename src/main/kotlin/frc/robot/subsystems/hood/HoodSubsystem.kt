@@ -3,10 +3,8 @@ package frc.robot.subsystems.hood
 import com.ctre.phoenix.motorcontrol.*
 import com.ctre.phoenix.sensors.AbsoluteSensorRange
 import com.ctre.phoenix.sensors.WPI_CANCoder
-import com.hamosad1657.lib.math.clamp
 import com.hamosad1657.lib.motors.HaTalonFX
-import com.hamosad1657.lib.units.compareTo
-import com.hamosad1657.lib.units.degrees
+import com.hamosad1657.lib.units.*
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.DigitalInput
@@ -59,7 +57,7 @@ object HoodSubsystem : SubsystemBase() {
 
 	fun getToAngle(desiredAngle: Rotation2d) {
 		val clampedDesiredAngleDeg =
-			clamp(desiredAngle.degrees, Constants.MIN_ANGLE.degrees, Constants.MAX_ANGLE.degrees)
+			clamp(desiredAngle, Constants.MIN_ANGLE, Constants.MAX_ANGLE).degrees
 
 		this.setpoint = clampedDesiredAngleDeg.degrees
 

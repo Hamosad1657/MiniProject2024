@@ -1,5 +1,6 @@
 package com.hamosad1657.lib.units
 
+import com.hamosad1657.lib.math.clamp
 import edu.wpi.first.math.geometry.Rotation2d
 
 /// --- Length ---
@@ -47,3 +48,7 @@ inline val Double.rotations: Rotation2d get() = Rotation2d.fromRotations(this)
 inline val Int.rotations: Rotation2d get() = Rotation2d.fromRotations(this.toDouble())
 
 operator fun Rotation2d.compareTo(other: Rotation2d): Int = this.degrees.compareTo(other.degrees)
+
+fun clamp(value: Rotation2d, min: Rotation2d, max: Rotation2d): Rotation2d {
+	return clamp(value.degrees, min.degrees, max.degrees).degrees
+}
