@@ -6,6 +6,7 @@ import com.ctre.phoenix.sensors.WPI_CANCoder
 import com.hamosad1657.lib.math.clamp
 import com.hamosad1657.lib.math.wrap0to360
 import com.hamosad1657.lib.motors.HaTalonFX
+import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -49,9 +50,13 @@ object TurretSubsystem : SubsystemBase() {
 	 * @param desiredAngle Can be any value, is not required to be in 0 to 360
 	 */
 	fun getToAngle(desiredAngle: Rotation2d) {
-		val wrappedDesiredAngle = wrap0to360(desiredAngle.degrees)
-		val clampedDesiredAngle = clamp(wrappedDesiredAngle, Constants.MIN_ANGLE.degrees, Constants.MAX_ANGLE.degrees)
-		val setpointDeg = clampedDesiredAngle / Constants.GEAR_RATIO_ENCODER_TO_TURRET
+		val wrappedDesiredAngleDeg = wrap0to360(desiredAngle.degrees)
+		val clampedDesiredAngleDeg =
+			clamp(wrappedDesiredAngleDeg, Constants.MIN_ANGLE.degrees, Constants.MAX_ANGLE.degrees)
+
+		this.setpoint = clampedDesiredAngleDeg.degrees
+
+		val setpointDeg = clampedDesiredAngleDeg / Constants.GEAR_RATIO_ENCODER_TO_TURRET
 		motor.set(ControlMode.Position, setpointDeg)
 	}
 

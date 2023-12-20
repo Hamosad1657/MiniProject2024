@@ -6,6 +6,7 @@ import com.ctre.phoenix.sensors.CANCoder
 import com.hamosad1657.lib.math.clamp
 import com.hamosad1657.lib.motors.HaTalonFX
 import com.hamosad1657.lib.units.compareTo
+import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.DigitalInput
@@ -43,10 +44,12 @@ object HoodSubsystem : SubsystemBase() {
 	}
 
 	fun getToAngle(desiredAngle: Rotation2d) {
-		setpoint = desiredAngle
-		val clampedDesiredAngle =
+		val clampedDesiredAngleDeg =
 			clamp(desiredAngle.degrees, Constants.MIN_HOOD_ANGLE.degrees, Constants.MAX_HOOD_ANGLE.degrees)
-		val setpointDeg = clampedDesiredAngle / GEAR_RATIO_ENCODER_TO_HOOD
+
+		this.setpoint = clampedDesiredAngleDeg.degrees
+
+		val setpointDeg = clampedDesiredAngleDeg / GEAR_RATIO_ENCODER_TO_HOOD
 		motor.set(ControlMode.Position, setpointDeg)
 	}
 
