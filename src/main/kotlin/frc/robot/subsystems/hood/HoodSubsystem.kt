@@ -26,8 +26,8 @@ object HoodSubsystem : SubsystemBase() {
 		inverted = false // TODO: verify positive output makes the angle higher (more positive)
 		configRemoteFeedbackFilter(encoder, 0)
 		configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0)
-		configForwardSoftLimitThreshold((Constants.MAX_HOOD_ANGLE * GEAR_RATIO_ENCODER_TO_HOOD).degrees)
-		configForwardSoftLimitThreshold((Constants.MIN_HOOD_ANGLE * GEAR_RATIO_ENCODER_TO_HOOD).degrees)
+		configForwardSoftLimitThreshold((Constants.MAX_ANGLE * GEAR_RATIO_ENCODER_TO_HOOD).degrees)
+		configForwardSoftLimitThreshold((Constants.MIN_ANGLE * GEAR_RATIO_ENCODER_TO_HOOD).degrees)
 		configForwardSoftLimitEnable(true)
 		configReverseSoftLimitEnable(true)
 		configPIDGains(Constants.PID_GAINS)
@@ -44,25 +44,27 @@ object HoodSubsystem : SubsystemBase() {
 	/** Pressed at highest hood angle */
 	private val topLimitSwitch = DigitalInput(RobotMap.Hood.TOP_LIMIT_CHANNEL)
 
+	// Switches are wired normally true
+	val isAtBottomLimit get() = !bottomLimitSwitch.get() || currentAngle > Constants.MAX_ANGLE
+	val isAtTopLimit get() = !topLimitSwitch.get() || currentAngle < Constants.MIN_ANGLE
+
 	private val currentAngle: Rotation2d get() = Rotation2d.fromDegrees(encoder.position * GEAR_RATIO_ENCODER_TO_HOOD)
 	private var setpoint = Rotation2d()
 	private val error
 		get() = setpoint - currentAngle
 
 	init {
-		motor.forwardLimit = { currentAngle >= Constants.MAX_HOOD_ANGLE }
-		motor.reverseLimit = { bottomLimitSwitch.get() }
 		SmartDashboard.putData(this)
 	}
 
 	fun getToAngle(desiredAngle: Rotation2d) {
 		val clampedDesiredAngleDeg =
-			clamp(desiredAngle.degrees, Constants.MIN_HOOD_ANGLE.degrees, Constants.MAX_HOOD_ANGLE.degrees)
+			clamp(desiredAngle.degrees, Constants.MIN_ANGLE.degrees, Constants.MAX_ANGLE.degrees)
 
 		this.setpoint = clampedDesiredAngleDeg.degrees
 
 		val setpointDeg = clampedDesiredAngleDeg / GEAR_RATIO_ENCODER_TO_HOOD
-		motor.set(ControlMode.Position, setpointDeg)
+		setWithLimits(ControlMode.Position, setpointDeg)
 	}
 
 	fun stopHood() {
@@ -75,8 +77,8 @@ object HoodSubsystem : SubsystemBase() {
 	}
 
 	private fun setWithLimits(controlMode: ControlMode, value: Double) {
-		if (error.degrees > 0.0 && !topLimitSwitch.get() ||
-			error.degrees < 0.0 && !bottomLimitSwitch.get()
+		if (error.degrees > 0.0 && isAtTopLimit ||
+			error.degrees < 0.0 && isAtBottomLimit
 		) { // Switches are wired normally true
 			motor.stopMotor()
 		} else {

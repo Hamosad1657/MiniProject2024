@@ -6,6 +6,7 @@ import com.ctre.phoenix.sensors.WPI_CANCoder
 import com.hamosad1657.lib.math.clamp
 import com.hamosad1657.lib.math.wrap0to360
 import com.hamosad1657.lib.motors.HaTalonFX
+import com.hamosad1657.lib.units.compareTo
 import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.util.sendable.SendableBuilder
@@ -33,11 +34,16 @@ object TurretSubsystem : SubsystemBase() {
 		configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
 	}
 
-	private val CWLimit = DigitalInput(RobotMap.Turret.CW_LIMIT_CHANNEL)
-	private val CCWLimit = DigitalInput(RobotMap.Turret.CCW_LIMIT_CHANNEL)
-
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
 	val currentAngle: Rotation2d get() = Rotation2d.fromDegrees(encoder.position * Constants.GEAR_RATIO_ENCODER_TO_TURRET)
+
+	private val CWLimitSwitch = DigitalInput(RobotMap.Turret.CW_LIMIT_CHANNEL)
+	private val CCWLimitSwitch = DigitalInput(RobotMap.Turret.CCW_LIMIT_CHANNEL)
+
+	// Switches are wired normally true
+	val isAtCWLimit get() = !CWLimitSwitch.get() || currentAngle < Constants.MIN_ANGLE
+	val isAtCCWLimit get() = !CCWLimitSwitch.get() || currentAngle > Constants.MAX_ANGLE
+
 	val farthestTurnAngle get() = if (currentAngle.degrees >= 180) Constants.MIN_ANGLE else Constants.MAX_ANGLE
 
 	private var setpoint = Rotation2d()
@@ -76,8 +82,8 @@ object TurretSubsystem : SubsystemBase() {
 	}
 
 	private fun setWithLimits(controlMode: ControlMode, value: Double) {
-		if (error.degrees > 0.0 && !CCWLimit.get() ||
-			error.degrees < 0.0 && !CWLimit.get()
+		if (error.degrees > 0.0 && isAtCCWLimit ||
+			error.degrees < 0.0 && isAtCWLimit
 		) { // Switch is wired normally true
 			motor.stopMotor()
 		} else {
@@ -90,6 +96,8 @@ object TurretSubsystem : SubsystemBase() {
 		builder.addDoubleProperty("Robot-relative angle deg", { currentAngle.degrees }, null)
 		builder.addDoubleProperty("Encoder degrees", { encoder.position }, null)
 		builder.addBooleanProperty("Within Tolerance", ::withinTolerance, null)
+		builder.addBooleanProperty("CW limit", { isAtCWLimit }, null)
+		builder.addBooleanProperty("CCW limit", { isAtCCWLimit }, null)
 	}
 
 

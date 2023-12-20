@@ -13,10 +13,10 @@ object HoodConstants {
 	/**
 	 * Lowest hood angle
 	 */
-	val MIN_HOOD_ANGLE = 0.0.degrees
+	val MIN_ANGLE = 0.0.degrees
 
 	/**
 	 * Highest hood angle
 	 */
-	val MAX_HOOD_ANGLE = 180.0.degrees
+	val MAX_ANGLE = 180.0.degrees
 }
