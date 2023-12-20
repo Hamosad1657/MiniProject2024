@@ -54,4 +54,8 @@ object ShooterSubsystem : SubsystemBase() {
 		builder.addDoubleProperty("Setpoint deg per sec", { setpoint.degPs }, null)
 		builder.addBooleanProperty("Within tolerance", ::withinTolerance, null)
 	}
+
+	init {
+		this.defaultCommand = run { getToVelocity(setpoint) }
+	}
 }
