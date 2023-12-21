@@ -8,6 +8,13 @@ object ShooterConstants {
 	val PID_GAINS = PIDGains(0.0, 0.0, 0.0)
 	val VELOCITY_TOLERANCE = AngularVelocity.fromFalconTicksPer100ms(0.0)
 
+	/**
+	 * Gear ratio between motor and flywheel is 1.
+	 * For every rotation of the flywheel, X balls are shot.
+	 * Multiply by this value to get motor rotations from balls.
+	 *
+	 * TODO: Find X by filming the shooter in slow-motion.
+	 */
 	const val SHOOTER_BALLS_PER_ROTATION = 0.0
 
 	val MAX_VELOCITY = AngularVelocity.fromRpm(6300.0) // Falcon free speed is 6380 according to Vex, I rounded it down

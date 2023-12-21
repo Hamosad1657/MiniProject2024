@@ -20,7 +20,7 @@ object ShooterSubsystem : SubsystemBase() {
 		setNeutralMode(NeutralMode.Coast)
 	}
 
-	val ballsPerSec: Double get() = angularVelocity.rps * Constants.SHOOTER_BALLS_PER_ROTATION
+	val ballsPerSec: Double get() = angularVelocity.rps / Constants.SHOOTER_BALLS_PER_ROTATION
 
 	private val angularVelocity get() = AngularVelocity.fromFalconTicksPer100ms(motor.selectedSensorVelocity)
 
