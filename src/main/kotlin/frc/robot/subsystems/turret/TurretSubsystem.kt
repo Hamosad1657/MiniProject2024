@@ -19,11 +19,11 @@ import frc.robot.subsystems.turret.TurretConstants
 import kotlin.math.abs
 import frc.robot.subsystems.turret.TurretConstants as Constants
 
-object TurretSubsystem : SubsystemBase() {
+object TurretSubsystem : SubsystemBase(), AutoCloseable {
 	private val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID).apply {
 		inverted = false // TODO: verify Turret motor is CCW positive
-		configForwardSoftLimitThreshold((Constants.MAX_ANGLE.degrees * Constants.GEAR_RATIO_ENCODER_TO_TURRET))
-		configReverseSoftLimitThreshold((Constants.MIN_ANGLE.degrees * Constants.GEAR_RATIO_ENCODER_TO_TURRET))
+		configForwardSoftLimitThreshold(Constants.MAX_ANGLE.degrees * Constants.GEAR_RATIO_ENCODER_TO_TURRET)
+		configReverseSoftLimitThreshold(Constants.MIN_ANGLE.degrees * Constants.GEAR_RATIO_ENCODER_TO_TURRET)
 		configForwardSoftLimitEnable(true)
 		configReverseSoftLimitEnable(true)
 
@@ -57,6 +57,7 @@ object TurretSubsystem : SubsystemBase() {
 	init {
 		SmartDashboard.putData(this)
 		getToAngle(Constants.MIN_ANGLE)
+		this.defaultCommand = run { getToAngle(setpoint) }
 	}
 
 	fun stopTurret() {
@@ -104,8 +105,11 @@ object TurretSubsystem : SubsystemBase() {
 		builder.addBooleanProperty("CCW limit", { isAtCCWLimit }, null)
 	}
 
-	init {
-		this.defaultCommand = run { getToAngle(setpoint) }
+	override fun close() {
+		motor.close()
+		encoder.close()
+		CWLimitSwitch.close()
+		CCWLimitSwitch.close()
 	}
 
 }
