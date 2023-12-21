@@ -22,8 +22,8 @@ import frc.robot.subsystems.turret.TurretConstants as Constants
 object TurretSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID).apply {
 		inverted = false // TODO: verify Turret motor is CCW positive
-		configForwardSoftLimitThreshold((Constants.MAX_ANGLE * Constants.GEAR_RATIO_ENCODER_TO_TURRET).degrees)
-		configReverseSoftLimitThreshold((Constants.MIN_ANGLE * Constants.GEAR_RATIO_ENCODER_TO_TURRET).degrees)
+		configForwardSoftLimitThreshold((Constants.MAX_ANGLE.degrees * Constants.GEAR_RATIO_ENCODER_TO_TURRET))
+		configReverseSoftLimitThreshold((Constants.MIN_ANGLE.degrees * Constants.GEAR_RATIO_ENCODER_TO_TURRET))
 		configForwardSoftLimitEnable(true)
 		configReverseSoftLimitEnable(true)
 
@@ -38,7 +38,7 @@ object TurretSubsystem : SubsystemBase() {
 	}
 
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
-	val currentAngle: Rotation2d get() = Rotation2d.fromDegrees(encoder.position * Constants.GEAR_RATIO_ENCODER_TO_TURRET)
+	val currentAngle: Rotation2d get() = Rotation2d.fromDegrees(encoder.position / Constants.GEAR_RATIO_ENCODER_TO_TURRET)
 
 	private val CWLimitSwitch = DigitalInput(RobotMap.Turret.CW_LIMIT_CHANNEL)
 	private val CCWLimitSwitch = DigitalInput(RobotMap.Turret.CCW_LIMIT_CHANNEL)
@@ -74,7 +74,7 @@ object TurretSubsystem : SubsystemBase() {
 
 		this.setpoint = clampedDesiredAngleDeg.degrees
 
-		val setpointDeg = clampedDesiredAngleDeg / Constants.GEAR_RATIO_ENCODER_TO_TURRET
+		val setpointDeg = clampedDesiredAngleDeg * Constants.GEAR_RATIO_ENCODER_TO_TURRET
 		setWithLimits(ControlMode.Position, setpointDeg)
 	}
 

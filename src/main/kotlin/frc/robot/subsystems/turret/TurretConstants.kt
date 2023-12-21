@@ -13,6 +13,7 @@ object TurretConstants {
 	 * what is measured by the CANCoder, due to the gear ratio.
 	 */
 	val MIN_ANGLE = 0.0.degrees
+
 	/**
 	 * Maximum angle of the turret. This may be different from
 	 * what is measured by the CANCoder, due to the gear ratio.
@@ -24,10 +25,10 @@ object TurretConstants {
 	const val CAMERA_WIDTH = 600
 
 	/**
-	 * When multiplying this ratio by the degrees measured by the encoder,
-	 * it should return the turret's angle in 0 to 360.
+	 * For every 151 rotation the encoder sees, the turret does 20 rotations.
+	 * Multiply by this value to get encoder rotations from turret rotations.
 	 */
-	const val GEAR_RATIO_ENCODER_TO_TURRET = 0.0
+	const val GEAR_RATIO_ENCODER_TO_TURRET = 20.0 / 151.0
 
 	const val TELEOP_ANGLE_MULTIPLIER = 0.0
 
