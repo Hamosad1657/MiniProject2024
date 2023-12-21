@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake
+package frc.robot.subsystems
 
 import com.hamosad1657.lib.units.Length
 import frc.robot.mechanisms.HoodShooterState

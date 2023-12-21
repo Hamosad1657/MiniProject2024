@@ -1,6 +1,8 @@
-package frc.robot.subsystems.intake
+package frc.robot.subsystems
 
 import edu.wpi.first.hal.HAL
+import frc.robot.subsystems.intake.IntakeConstants
+import frc.robot.subsystems.intake.IntakeSubsystem
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 
