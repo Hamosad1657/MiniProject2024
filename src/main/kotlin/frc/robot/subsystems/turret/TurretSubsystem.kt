@@ -104,5 +104,8 @@ object TurretSubsystem : SubsystemBase() {
 		builder.addBooleanProperty("CCW limit", { isAtCCWLimit }, null)
 	}
 
+	init {
+		this.defaultCommand = run { getToAngle(setpoint) }
+	}
 
 }
