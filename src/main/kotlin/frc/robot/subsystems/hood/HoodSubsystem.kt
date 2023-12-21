@@ -23,8 +23,8 @@ object HoodSubsystem : SubsystemBase() {
 		inverted = false // TODO: verify positive output makes the angle higher (more positive)
 		configRemoteFeedbackFilter(encoder, 0)
 		configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0)
-		configForwardSoftLimitThreshold((Constants.MAX_ANGLE * GEAR_RATIO_ENCODER_TO_HOOD).degrees)
-		configForwardSoftLimitThreshold((Constants.MIN_ANGLE * GEAR_RATIO_ENCODER_TO_HOOD).degrees)
+		configForwardSoftLimitThreshold(Constants.MAX_ANGLE.degrees * GEAR_RATIO_ENCODER_TO_HOOD)
+		configForwardSoftLimitThreshold(Constants.MIN_ANGLE.degrees * GEAR_RATIO_ENCODER_TO_HOOD)
 		configForwardSoftLimitEnable(true)
 		configReverseSoftLimitEnable(true)
 		configPIDGains(Constants.PID_GAINS)
@@ -46,7 +46,7 @@ object HoodSubsystem : SubsystemBase() {
 	val isAtBottomLimit get() = !bottomLimitSwitch.get() || currentAngle > Constants.MAX_ANGLE
 	val isAtTopLimit get() = !topLimitSwitch.get() || currentAngle < Constants.MIN_ANGLE
 
-	private val currentAngle: Rotation2d get() = Rotation2d.fromDegrees(encoder.position * GEAR_RATIO_ENCODER_TO_HOOD)
+	private val currentAngle: Rotation2d get() = Rotation2d.fromDegrees(encoder.position / GEAR_RATIO_ENCODER_TO_HOOD)
 	private var setpoint = Rotation2d()
 	private val error
 		get() = setpoint - currentAngle
@@ -61,7 +61,7 @@ object HoodSubsystem : SubsystemBase() {
 
 		this.setpoint = clampedDesiredAngleDeg.degrees
 
-		val setpointDeg = clampedDesiredAngleDeg / GEAR_RATIO_ENCODER_TO_HOOD
+		val setpointDeg = clampedDesiredAngleDeg * GEAR_RATIO_ENCODER_TO_HOOD
 		setWithLimits(ControlMode.Position, setpointDeg)
 	}
 

@@ -8,7 +8,12 @@ object HoodConstants {
 	val PID_GAINS = PIDGains(0.0, 0.0, 0.0)
 	val ANGLE_TOLERANCE = Rotation2d()
 
-	const val GEAR_RATIO_ENCODER_TO_HOOD = 0.0
+	/**
+	 * For every 144 rotations the encoder sees, the hood moves 16 rotations.
+	 *
+	 * Multiply by this value to get encoder rotations from hood rotations.
+	 */
+	const val GEAR_RATIO_ENCODER_TO_HOOD = 16.0 / 144.0
 
 	/**
 	 * Lowest hood angle

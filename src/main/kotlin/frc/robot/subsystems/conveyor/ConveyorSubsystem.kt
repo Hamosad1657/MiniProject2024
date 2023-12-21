@@ -26,17 +26,17 @@ object ConveyorSubsystem : SubsystemBase() {
 	private val conveyorPIDController = conveyorMotor.pidController
 
 	val conveyorBallsPerSec: Double
-		get() = conveyorEncoder.velocity * Constants.CONVEYOR_BALLS_PER_ROTATION
+		get() = conveyorEncoder.velocity / Constants.CONVEYOR_BALLS_PER_MOTOR_ROTATION
 
 	val loaderBallsPerSec: Double
-		get() = loaderEncoder.velocity * Constants.LOADER_BALLS_PER_ROTATION
+		get() = loaderEncoder.velocity / Constants.LOADER_BALLS_PER_MOTOR_ROTATION
 
 	init {
 		SmartDashboard.putData(this)
 	}
 
 	fun runConveyor(ballsPerSecs: Double) {
-		val setpointRPM = ballsPerSecs * Constants.CONVEYOR_BALLS_PER_ROTATION / 60.0
+		val setpointRPM = ballsPerSecs * Constants.CONVEYOR_BALLS_PER_MOTOR_ROTATION / 60.0
 		conveyorPIDController.setReference(setpointRPM, ControlType.kVelocity)
 	}
 
@@ -45,7 +45,7 @@ object ConveyorSubsystem : SubsystemBase() {
 	}
 
 	fun runLoader(ballsPerSecs: Double) {
-		val setpointRPM = ballsPerSecs * Constants.LOADER_BALLS_PER_ROTATION / 60.0
+		val setpointRPM = ballsPerSecs * Constants.LOADER_BALLS_PER_MOTOR_ROTATION / 60.0
 		loaderPIDController.setReference(setpointRPM, ControlType.kVelocity)
 	}
 
