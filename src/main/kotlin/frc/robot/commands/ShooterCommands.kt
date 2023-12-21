@@ -7,9 +7,9 @@ import frc.robot.subsystems.shooter.ShooterConstants
 import frc.robot.subsystems.shooter.ShooterSubsystem
 import kotlin.experimental.ExperimentalTypeInference
 
-@OptIn(ExperimentalTypeInference::class) // Can be done per method, class or file
+@OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
-
+@JvmName("shootBallsCommandBallsPerSec")
 fun ShooterSubsystem.shootBallsCommand(ballsPerSecSupplier: () -> Double): Command {
 	return withName("ShootBalls") {
 		val angularVelocitySupplier: () -> AngularVelocity = {
@@ -20,6 +20,7 @@ fun ShooterSubsystem.shootBallsCommand(ballsPerSecSupplier: () -> Double): Comma
 	}
 }
 
+@JvmName("shootBallsCommandAngularVelocity")
 fun ShooterSubsystem.shootBallsCommand(angularVelocitySupplier: () -> AngularVelocity): Command =
 	withName("shootBalls") {
 		run {
