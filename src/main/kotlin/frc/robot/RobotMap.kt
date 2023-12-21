@@ -8,7 +8,7 @@ object RobotMap {
 		const val MOTOR_ID = 0
 		const val CANCODER_ID = 0
 		const val CW_LIMIT_CHANNEL = 0
-		const val CCW_LIMIT_CHANNEL = 0
+		const val CCW_LIMIT_CHANNEL = 1
 	}
 
 	object Shooter {
