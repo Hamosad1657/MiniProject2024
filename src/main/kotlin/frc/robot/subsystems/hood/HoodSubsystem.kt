@@ -18,6 +18,10 @@ import frc.robot.subsystems.hood.HoodConstants as Constants
 
 
 object HoodSubsystem : SubsystemBase() {
+	private val encoder = WPI_CANCoder(RobotMap.Hood.ENCODER_ID).apply {
+		configSensorDirection(false) // Positive angle is higher.
+		configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
+	}
 
 	private val motor = HaTalonFX(RobotMap.Hood.MOTOR_ID).apply {
 		inverted = false // TODO: verify positive output makes the angle higher (more positive)
@@ -29,11 +33,6 @@ object HoodSubsystem : SubsystemBase() {
 		configReverseSoftLimitEnable(true)
 		configPIDGains(Constants.PID_GAINS)
 		setNeutralMode(NeutralMode.Brake)
-	}
-
-	private val encoder = WPI_CANCoder(RobotMap.Hood.ENCODER_ID).apply {
-		configSensorDirection(false) // TODO: verify more positive measurement is higher hood angle
-		configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
 	}
 
 	/** Pressed at lowest hood angle */
