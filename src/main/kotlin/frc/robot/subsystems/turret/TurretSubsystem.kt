@@ -20,8 +20,13 @@ import kotlin.math.abs
 import frc.robot.subsystems.turret.TurretConstants as Constants
 
 object TurretSubsystem : SubsystemBase(), AutoCloseable {
+	private val encoder = WPI_CANCoder(RobotMap.Turret.CANCODER_ID).apply {
+		configSensorDirection(true) // Turret CANCoder is CCW positive
+		configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
+	}
+
 	private val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID).apply {
-		inverted = false // TODO: verify Turret motor is CCW positive
+		inverted = false // TODO: verify turret motor is CCW positive
 		configForwardSoftLimitThreshold(Constants.MAX_ANGLE.degrees * Constants.GEAR_RATIO_ENCODER_TO_TURRET)
 		configReverseSoftLimitThreshold(Constants.MIN_ANGLE.degrees * Constants.GEAR_RATIO_ENCODER_TO_TURRET)
 		configForwardSoftLimitEnable(true)
@@ -30,11 +35,6 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 		configPIDGains(Constants.PID_GAINS)
 
 		setNeutralMode(NeutralMode.Brake)
-	}
-
-	private val encoder = WPI_CANCoder(RobotMap.Turret.CANCODER_ID).apply {
-		configSensorDirection(false) // TODO: verify Turret CANCoder is CCW positive
-		configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
 	}
 
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
