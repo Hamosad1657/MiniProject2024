@@ -83,6 +83,8 @@ object HoodSubsystem : SubsystemBase() {
 
 	override fun initSendable(builder: SendableBuilder) {
 		builder.setSmartDashboardType("HoodSubsystem")
+		builder.addBooleanProperty("Bottom angle limit", { isAtBottomLimit }, null)
+		builder.addBooleanProperty("Top angle angle limit", { isAtTopLimit }, null)
 		builder.addDoubleProperty("Current Angle deg", { currentAngle.degrees }, null)
 		builder.addDoubleProperty("Encoder angle deg", { encoder.position }, null)
 		builder.addBooleanProperty("Within tolerance", ::withinTolerance, null)
