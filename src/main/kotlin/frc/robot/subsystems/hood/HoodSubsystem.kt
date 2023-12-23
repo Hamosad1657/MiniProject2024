@@ -38,11 +38,14 @@ object HoodSubsystem : SubsystemBase() {
 	/** Pressed at lowest hood angle */
 	private val bottomLimitSwitch = DigitalInput(RobotMap.Hood.BOTTOM_LIMIT_CHANNEL)
 
-	// Switches are wired normally true
+	// Switch is wired normally true, false when pressed
 	val isAtBottomLimit get() = !bottomLimitSwitch.get() || currentAngle < Constants.MIN_ANGLE
 	val isAtTopLimit get() = currentAngle > Constants.MAX_ANGLE
 
-	private val currentAngle: Rotation2d get() = Rotation2d.fromDegrees(encoder.position / GEAR_RATIO_ENCODER_TO_HOOD)
+	var currentAngle = Rotation2d()
+		get() = Rotation2d.fromDegrees(encoder.position / GEAR_RATIO_ENCODER_TO_HOOD)
+		private set
+
 	private var setpoint = Rotation2d()
 	private val error
 		get() = setpoint - currentAngle
@@ -78,6 +81,13 @@ object HoodSubsystem : SubsystemBase() {
 			stopHood()
 		} else {
 			motor.set(controlMode, value)
+		}
+	}
+
+	override fun periodic() {
+		// Switch is wired normally true, false when pressed
+		if (!bottomLimitSwitch.get()) {
+			currentAngle = Constants.MIN_ANGLE
 		}
 	}
 

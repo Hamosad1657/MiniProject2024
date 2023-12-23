@@ -38,12 +38,14 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 	}
 
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
-	val currentAngle: Rotation2d get() = Rotation2d.fromDegrees(encoder.position / Constants.GEAR_RATIO_ENCODER_TO_TURRET)
+	var currentAngle = Rotation2d()
+		get() = Rotation2d.fromDegrees(encoder.position / Constants.GEAR_RATIO_ENCODER_TO_TURRET)
+		private set
 
 	private val CWLimitSwitch = DigitalInput(RobotMap.Turret.CW_LIMIT_CHANNEL)
 	private val CCWLimitSwitch = DigitalInput(RobotMap.Turret.CCW_LIMIT_CHANNEL)
 
-	// Switches are wired normally false
+	// Switches are wired normally false, true when pressed
 	val isAtCWLimit get() = CWLimitSwitch.get() || currentAngle < Constants.MIN_ANGLE
 	val isAtCCWLimit get() = CCWLimitSwitch.get() || currentAngle > Constants.MAX_ANGLE
 
@@ -93,6 +95,13 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 			stopTurret()
 		} else {
 			motor.set(controlMode, value)
+		}
+	}
+
+	override fun periodic() {
+		// Switch is wired normally false, true when pressed
+		if (CWLimitSwitch.get()) {
+			currentAngle = Constants.MIN_ANGLE
 		}
 	}
 
