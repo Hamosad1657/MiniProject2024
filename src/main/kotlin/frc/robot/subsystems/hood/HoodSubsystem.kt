@@ -24,7 +24,7 @@ object HoodSubsystem : SubsystemBase() {
 	}
 
 	private val motor = HaTalonFX(RobotMap.Hood.MOTOR_ID).apply {
-		inverted = false // TODO: verify positive output makes the angle higher (more positive)
+		inverted = false // Positive output is higher angle
 		configRemoteFeedbackFilter(encoder, 0)
 		configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0)
 		configForwardSoftLimitThreshold(Constants.MAX_ANGLE.degrees * GEAR_RATIO_ENCODER_TO_HOOD)
