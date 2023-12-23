@@ -19,7 +19,6 @@ object RobotMap {
 		const val MOTOR_ID = 6
 		const val ENCODER_ID = 5
 		const val BOTTOM_LIMIT_CHANNEL = 0
-		const val TOP_LIMIT_CHANNEL = 0
 	}
 
 	object Conveyor {
