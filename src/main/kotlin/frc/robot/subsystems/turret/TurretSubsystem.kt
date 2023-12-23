@@ -43,9 +43,9 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 	private val CWLimitSwitch = DigitalInput(RobotMap.Turret.CW_LIMIT_CHANNEL)
 	private val CCWLimitSwitch = DigitalInput(RobotMap.Turret.CCW_LIMIT_CHANNEL)
 
-	// Switches are wired normally true
-	val isAtCWLimit get() = !CWLimitSwitch.get() || currentAngle < Constants.MIN_ANGLE
-	val isAtCCWLimit get() = !CCWLimitSwitch.get() || currentAngle > Constants.MAX_ANGLE
+	// Switches are wired normally false
+	val isAtCWLimit get() = CWLimitSwitch.get() || currentAngle < Constants.MIN_ANGLE
+	val isAtCCWLimit get() = CCWLimitSwitch.get() || currentAngle > Constants.MAX_ANGLE
 
 	val farthestTurnAngle get() = if (currentAngle.degrees >= 180) Constants.MIN_ANGLE else Constants.MAX_ANGLE
 
@@ -89,7 +89,7 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 	private fun setWithLimits(controlMode: ControlMode, value: Double) {
 		if (error.degrees > 0.0 && isAtCCWLimit ||
 			error.degrees < 0.0 && isAtCWLimit
-		) { // Switch is wired normally true
+		) {
 			stopTurret()
 		} else {
 			motor.set(controlMode, value)
