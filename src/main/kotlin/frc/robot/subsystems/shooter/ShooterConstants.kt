@@ -9,7 +9,7 @@ object ShooterConstants {
 	val VELOCITY_TOLERANCE = AngularVelocity.fromFalconTicksPer100ms(0.0)
 
 	/**
-	 * Gear ratio between motor and flywheel is 1.
+	 * For every rotation of the motor, the flywheel does 0.9 rotations.
 	 * For every rotation of the flywheel, X balls are shot.
 	 * Multiply by this value to get motor rotations from balls.
 	 *
