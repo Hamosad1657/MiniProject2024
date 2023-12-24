@@ -2,13 +2,10 @@ package frc.robot.subsystems.turret
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.NeutralMode
-import com.ctre.phoenix.sensors.AbsoluteSensorRange
 import com.ctre.phoenix.sensors.WPI_CANCoder
 import com.hamosad1657.lib.math.clamp
 import com.hamosad1657.lib.math.wrap0to360
 import com.hamosad1657.lib.motors.HaTalonFX
-import com.hamosad1657.lib.units.compareTo
-import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.DigitalInput
@@ -22,32 +19,32 @@ import frc.robot.subsystems.turret.TurretConstants as Constants
 object TurretSubsystem : SubsystemBase(), AutoCloseable {
 	private val encoder = WPI_CANCoder(RobotMap.Turret.CANCODER_ID).apply {
 		configSensorDirection(true) // Turret CANCoder is CCW positive
-		configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360)
 	}
 
 	private val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID).apply {
 		inverted = false // Positive output is CCW rotation
-		configForwardSoftLimitThreshold(Constants.MAX_ANGLE.degrees * Constants.GEAR_RATIO_ENCODER_TO_TURRET)
-		configReverseSoftLimitThreshold(Constants.MIN_ANGLE.degrees * Constants.GEAR_RATIO_ENCODER_TO_TURRET)
-		configForwardSoftLimitEnable(true)
-		configReverseSoftLimitEnable(true)
+		configForwardSoftLimitThreshold(Constants.MIN_POSITION * 4096)
+		configReverseSoftLimitThreshold(Constants.MAX_POSITION * 4096)
+		configForwardSoftLimitEnable(false)
+		configReverseSoftLimitEnable(false)
 
 		configPIDGains(Constants.PID_GAINS)
 
-		setNeutralMode(NeutralMode.Brake)
+		// setNeutralMode(NeutralMode.Brake)
+		setNeutralMode(NeutralMode.Coast) // TODO: Change turret back to brake when done testing ratios and limits and such
 	}
 
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
 	var currentAngle = Rotation2d()
-		get() = Rotation2d.fromDegrees(encoder.position / Constants.GEAR_RATIO_ENCODER_TO_TURRET)
+		get() = Rotation2d.fromDegrees((encoder.position * Constants.GEAR_RATIO_ENCODER_TO_TURRET) - 90)
 		private set
 
 	private val CWLimitSwitch = DigitalInput(RobotMap.Turret.CW_LIMIT_CHANNEL)
 	private val CCWLimitSwitch = DigitalInput(RobotMap.Turret.CCW_LIMIT_CHANNEL)
 
 	// Switches are wired normally false, true when pressed
-	val isAtCWLimit get() = CWLimitSwitch.get() || currentAngle < Constants.MIN_ANGLE
-	val isAtCCWLimit get() = CCWLimitSwitch.get() || currentAngle > Constants.MAX_ANGLE
+	val isAtCWLimit get() = CWLimitSwitch.get()
+	val isAtCCWLimit get() = CCWLimitSwitch.get()
 
 	val farthestTurnAngle get() = if (currentAngle.degrees >= 180) Constants.MIN_ANGLE else Constants.MAX_ANGLE
 
@@ -58,12 +55,10 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 
 	init {
 		SmartDashboard.putData(this)
-		getToAngle(Constants.MIN_ANGLE)
-		this.defaultCommand = run { getToAngle(setpoint) }
 	}
 
 	fun stopTurret() {
-		setpoint = currentAngle
+		setSetpoint(currentAngle.degrees)
 		motor.stopMotor()
 	}
 
@@ -75,10 +70,8 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 		val clampedDesiredAngleDeg =
 			clamp(wrappedDesiredAngleDeg, Constants.MIN_ANGLE.degrees, Constants.MAX_ANGLE.degrees)
 
-		this.setpoint = clampedDesiredAngleDeg.degrees
-
 		val setpointDeg = clampedDesiredAngleDeg * Constants.GEAR_RATIO_ENCODER_TO_TURRET
-		setWithLimits(ControlMode.Position, setpointDeg)
+		setSetpoint(setpointDeg)
 	}
 
 	fun guessTurnAngleFromTargetCorner(cornerX: Double) =
@@ -88,13 +81,24 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 		return abs(error.degrees) <= TurretConstants.TOLERANCE_DEGREES
 	}
 
-	private fun setWithLimits(controlMode: ControlMode, value: Double) {
+	fun setSetpoint(value: Double) {
+		this.setpoint
 		if (error.degrees > 0.0 && isAtCCWLimit ||
 			error.degrees < 0.0 && isAtCWLimit
 		) {
 			stopTurret()
 		} else {
-			motor.set(controlMode, value)
+			motor.set(ControlMode.Position, value)
+		}
+	}
+
+	fun setWithLimits(value: Double) {
+		if (value > 0.0 && isAtCCWLimit ||
+			value < 0.0 && isAtCWLimit
+		) {
+			stopTurret()
+		} else {
+			motor.set(value)
 		}
 	}
 
@@ -121,4 +125,8 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 		CCWLimitSwitch.close()
 	}
 
+	// TODO: Remove resetAngle() when done testing with it
+	fun resetEncoderAngle() {
+		encoder.position = 0.0
+	}
 }

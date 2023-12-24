@@ -96,3 +96,16 @@ fun TurretSubsystem.closedLoopTeleopCommand(
 		}
 	}
 }
+
+fun TurretSubsystem.openLoopTeleopCommand(
+	cwRotationSupplier: () -> Double,
+	ccwRotationSupplier: () -> Double,
+): Command {
+	return withName("openLoopTeleopCommand") {
+		run {
+			setWithLimits(cwRotationSupplier() - ccwRotationSupplier())
+		} finallyDo {
+			stopTurret()
+		}
+	}
+}

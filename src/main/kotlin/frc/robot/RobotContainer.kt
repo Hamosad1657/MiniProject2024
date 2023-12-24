@@ -1,15 +1,13 @@
 package frc.robot
 
-import com.hamosad1657.lib.math.simpleDeadband
+import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.wpilibj.PS4Controller
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
 import edu.wpi.first.wpilibj2.command.button.Trigger
-import frc.robot.commands.*
-import frc.robot.subsystems.conveyor.ConveyorSubsystem
-import frc.robot.subsystems.intake.IntakeSubsystem
-import frc.robot.subsystems.shooter.ShooterSubsystem
-import frc.robot.subsystems.swerve.SwerveSubsystem
+import frc.robot.commands.getToAngleCommand
+import frc.robot.commands.openLoopTeleopCommand
 import frc.robot.subsystems.turret.TurretSubsystem
 
 object RobotContainer {
@@ -22,40 +20,40 @@ object RobotContainer {
 	private val turretTeleopTrigger = Trigger { controllerB.r3Button }
 
 	init {
-		ShooterSubsystem
 		configureBindings()
 		setDefaultCommands()
 	}
 
 	private fun configureBindings() {
-		// Toggle intake on circle button
-		commandControllerB.circle()
-			.toggleOnTrue(IntakeSubsystem.collectCommand().finallyDo { IntakeSubsystem.stopIntakeCommand() })
+//		// Toggle intake on circle button
+//		commandControllerB.circle()
+//			.toggleOnTrue(IntakeSubsystem.collectCommand().finallyDo { IntakeSubsystem.stopIntakeCommand() })
+//
+//		// Toggle aim shoot and load on cross button
+//		commandControllerB.cross().toggleOnTrue(aimAndLoadWhenAimedCommand { SwerveSubsystem.pose })
 
-		// Toggle aim shoot and load on cross button
-		commandControllerB.cross().toggleOnTrue(aimAndLoadWhenAimedCommand { SwerveSubsystem.pose })
+//		// Aim shoot and load WITHOUT TURRET on square button
+//		commandControllerB.square().onTrue(aimShooterAndHoodCommand { SwerveSubsystem.pose }
+//			.alongWith(ConveyorSubsystem.loadWhenShooterAndHoodReady()))
+//
+//		// Turn turret to search for tags on options button
+//		commandControllerB.options().onTrue(TurretSubsystem.searchForAnyTagCommand())
 
-		// Toggle turret teleop control on right joystick press. Default command runs otherwise
-		turretTeleopTrigger.toggleOnTrue(
-			TurretSubsystem.closedLoopTeleopCommand(
-				{ simpleDeadband(commandControllerB.rightX, JOYSTICK_DEADBAND) },
-				{ simpleDeadband(-commandControllerB.rightX, JOYSTICK_DEADBAND) })
-		)
+		commandControllerB.triangle().onTrue(TurretSubsystem.getToAngleCommand(90.degrees))
 
-		// Aim shoot and load WITHOUT TURRET on square button
-		commandControllerB.square().onTrue(aimShooterAndHoodCommand { SwerveSubsystem.pose }
-			.alongWith(ConveyorSubsystem.loadWhenShooterAndHoodReady()))
-
-		// Turn turret to search for tags on options button
-		commandControllerB.options().onTrue(TurretSubsystem.searchForAnyTagCommand())
-
+		commandControllerB.share().onTrue(InstantCommand({ TurretSubsystem.resetEncoderAngle() }))
 	}
 
 	private fun setDefaultCommands() {
-		TurretSubsystem.defaultCommand = TurretSubsystem.aimTurretCommand { SwerveSubsystem.pose }
+		// Temporarily commented out for testing
+		// TODO: Change turret default command back to aimTurretCommand when done testing
+		// TurretSubsystem.defaultCommand = TurretSubsystem.aimTurretCommand { SwerveSubsystem.pose }
+		TurretSubsystem.defaultCommand = TurretSubsystem.openLoopTeleopCommand(
+			{ controllerB.l2Axis * 0.3 },
+			{ controllerB.r2Axis * 0.3 })
 	}
 
 	fun getAutonomousCommand(): Command? {
-		return null
+		return TurretSubsystem.getToAngleCommand(90.degrees)
 	}
 }
