@@ -7,7 +7,7 @@ object TurretConstants {
 	// -1900.986
 
 
-	val PID_GAINS = PIDGains(100.0, 0.0, 0.0)
+	val PID_GAINS = PIDGains(0.09, 0.0, 0.0)
 
 	const val TOLERANCE_DEGREES = 0.0
 

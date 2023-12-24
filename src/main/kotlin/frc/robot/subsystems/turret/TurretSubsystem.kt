@@ -50,15 +50,14 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 
 	private var setpoint = Rotation2d()
 
-	private val error
-		get() = setpoint - currentAngle
+	private val error get() = setpoint - currentAngle
 
 	init {
 		SmartDashboard.putData(this)
 	}
 
 	fun stopTurret() {
-		setSetpoint(currentAngle.degrees)
+//		setSetpoint(currentAngle.degrees)
 		motor.stopMotor()
 	}
 
@@ -104,13 +103,17 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 
 	override fun periodic() {
 		// Switch is wired normally false, true when pressed
-		if (CWLimitSwitch.get()) {
+		if (isAtCWLimit) {
 			currentAngle = Constants.MIN_ANGLE
+		}
+		if (isAtCCWLimit) {
+			currentAngle = Constants.MAX_ANGLE
 		}
 	}
 
 	override fun initSendable(builder: SendableBuilder) {
 		builder.setSmartDashboardType("TurretSubsystem")
+		builder.addDoubleProperty("Error", { error.degrees }, null)
 		builder.addDoubleProperty("Robot-relative angle deg", { currentAngle.degrees }, null)
 		builder.addDoubleProperty("Encoder degrees", { encoder.position }, null)
 		builder.addBooleanProperty("Within Tolerance", ::withinTolerance, null)
