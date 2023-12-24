@@ -1,13 +1,11 @@
 package frc.robot
 
 import com.hamosad1657.lib.units.degrees
-import edu.wpi.first.wpilibj.PS4Controller
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-import edu.wpi.first.wpilibj2.command.button.Trigger
-import frc.robot.commands.getToAngleCommand
-import frc.robot.commands.openLoopTeleopCommand
+import frc.robot.commands.*
+import frc.robot.subsystems.hood.HoodSubsystem
 import frc.robot.subsystems.turret.TurretSubsystem
 
 object RobotContainer {
@@ -15,9 +13,6 @@ object RobotContainer {
 
 	private val commandControllerA = CommandPS4Controller(RobotMap.DRIVER_A_CONTROLLER_PORT)
 	private val commandControllerB = CommandPS4Controller(RobotMap.DRIVER_B_CONTROLLER_PORT)
-	private val controllerB = PS4Controller(RobotMap.DRIVER_B_CONTROLLER_PORT)
-
-	private val turretTeleopTrigger = Trigger { controllerB.r3Button }
 
 	init {
 		configureBindings()
@@ -42,6 +37,8 @@ object RobotContainer {
 		commandControllerB.triangle().onTrue(TurretSubsystem.getToAngleCommand(90.degrees))
 
 		commandControllerB.share().onTrue(InstantCommand({ TurretSubsystem.resetEncoderAngle() }))
+
+		commandControllerB.options().onTrue(InstantCommand({ HoodSubsystem.zeroHood() }))
 	}
 
 	private fun setDefaultCommands() {
@@ -49,8 +46,10 @@ object RobotContainer {
 		// TODO: Change turret default command back to aimTurretCommand when done testing
 		// TurretSubsystem.defaultCommand = TurretSubsystem.aimTurretCommand { SwerveSubsystem.pose }
 		TurretSubsystem.defaultCommand = TurretSubsystem.openLoopTeleopCommand(
-			{ controllerB.l2Axis * 0.3 },
-			{ controllerB.r2Axis * 0.3 })
+			{ commandControllerB.l2Axis * 0.3 },
+			{ commandControllerB.r2Axis * 0.3 })
+
+		HoodSubsystem.defaultCommand = HoodSubsystem.teleopCommand { commandControllerB.leftY }
 	}
 
 	fun getAutonomousCommand(): Command? {

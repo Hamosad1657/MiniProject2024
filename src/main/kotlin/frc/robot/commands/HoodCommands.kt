@@ -16,6 +16,11 @@ fun HoodSubsystem.getToAngleCommand(desiredAngleSupplier: () -> Rotation2d): Com
 	}
 }
 
+fun HoodSubsystem.teleopCommand(joystickSupplier: () -> Double): Command = run {
+	setWithLimits(joystickSupplier())
+}.finallyDo { stopHood() }
+
+
 fun HoodSubsystem.stopCommand(): Command {
 	return withName("stopHood") { runOnce { stopHood() } }
 }

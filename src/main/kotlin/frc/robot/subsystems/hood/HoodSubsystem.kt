@@ -29,8 +29,8 @@ object HoodSubsystem : SubsystemBase() {
 		configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0)
 		configForwardSoftLimitThreshold(Constants.MAX_ANGLE.degrees * GEAR_RATIO_ENCODER_TO_HOOD)
 		configForwardSoftLimitThreshold(Constants.MIN_ANGLE.degrees * GEAR_RATIO_ENCODER_TO_HOOD)
-		configForwardSoftLimitEnable(true)
-		configReverseSoftLimitEnable(true)
+		configForwardSoftLimitEnable(false)
+		configReverseSoftLimitEnable(false)
 		configPIDGains(Constants.PID_GAINS)
 		setNeutralMode(NeutralMode.Brake)
 	}
@@ -61,7 +61,13 @@ object HoodSubsystem : SubsystemBase() {
 		this.setpoint = clampedDesiredAngleDeg.degrees
 
 		val setpointDeg = clampedDesiredAngleDeg * GEAR_RATIO_ENCODER_TO_HOOD
-		setWithLimits(ControlMode.Position, setpointDeg)
+		if (error.degrees > 0.0 && isAtTopLimit ||
+			error.degrees < 0.0 && isAtBottomLimit
+		) { // Switches are wired normally true
+			stopHood()
+		} else {
+			motor.set(ControlMode.Position, setpointDeg)
+		}
 	}
 
 	fun stopHood() {
@@ -74,14 +80,17 @@ object HoodSubsystem : SubsystemBase() {
 		return abs(error.degrees) <= HoodConstants.ANGLE_TOLERANCE.degrees
 	}
 
-	private fun setWithLimits(controlMode: ControlMode, value: Double) {
-		if (error.degrees > 0.0 && isAtTopLimit ||
-			error.degrees < 0.0 && isAtBottomLimit
+	fun setWithLimits(value: Double) {
+		if (isAtTopLimit || isAtBottomLimit
 		) { // Switches are wired normally true
 			stopHood()
 		} else {
-			motor.set(controlMode, value)
+			motor.set(ControlMode.PercentOutput, value)
 		}
+	}
+
+	fun zeroHood() {
+		currentAngle = 0.0.degrees
 	}
 
 	override fun periodic() {
