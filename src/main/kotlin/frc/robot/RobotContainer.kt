@@ -10,6 +10,7 @@ import frc.robot.subsystems.hood.HoodSubsystem
 import frc.robot.subsystems.loader.LoaderSubsystem
 import frc.robot.subsystems.shooter.ShooterSubsystem
 import frc.robot.subsystems.turret.TurretSubsystem
+import frc.robot.subsystems.vision.Vision
 
 object RobotContainer {
 	const val JOYSTICK_DEADBAND = 0.1
@@ -53,9 +54,7 @@ object RobotContainer {
 		// Temporarily commented out for testing
 		// TODO: Change turret default command back to aimTurretCommand when done testing
 		// TurretSubsystem.defaultCommand = TurretSubsystem.aimTurretCommand { SwerveSubsystem.pose }
-		TurretSubsystem.defaultCommand = TurretSubsystem.openLoopTeleopCommand(
-			{ commandControllerB.l2Axis * 0.3 },
-			{ commandControllerB.r2Axis * 0.3 })
+		TurretSubsystem.defaultCommand = TurretSubsystem.trackTargetCommand(Vision::currentBestTag)
 
 		HoodSubsystem.defaultCommand = HoodSubsystem.teleopCommand { commandControllerB.leftY }
 	}
