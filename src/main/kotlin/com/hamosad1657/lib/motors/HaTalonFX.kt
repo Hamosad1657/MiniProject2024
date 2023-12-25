@@ -121,6 +121,7 @@ class HaTalonFX(deviceNumber: Int) : WPI_TalonFX(deviceNumber) {
 		config_kP(slotIndex, gains.kP)
 		config_kI(slotIndex, gains.kI)
 		config_kD(slotIndex, gains.kD)
+		config_kF(slotIndex, gains.kFF)
 	}
 
 	companion object {
