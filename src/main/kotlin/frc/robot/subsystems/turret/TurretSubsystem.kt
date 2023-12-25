@@ -36,7 +36,7 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
 	var currentAngle = Rotation2d()
-		get() = Rotation2d.fromDegrees((encoder.position * Constants.GEAR_RATIO_ENCODER_TO_TURRET) - 90)
+		get() = Rotation2d.fromDegrees((encoder.position / Constants.GEAR_RATIO_ENCODER_TO_TURRET) - 90)
 		private set
 
 	private val CWLimitSwitch = DigitalInput(RobotMap.Turret.CW_LIMIT_CHANNEL)
