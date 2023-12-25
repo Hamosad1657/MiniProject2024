@@ -4,7 +4,8 @@ import com.ctre.phoenix.motorcontrol.*
 import com.ctre.phoenix.sensors.AbsoluteSensorRange
 import com.ctre.phoenix.sensors.WPI_CANCoder
 import com.hamosad1657.lib.motors.HaTalonFX
-import com.hamosad1657.lib.units.*
+import com.hamosad1657.lib.units.clamp
+import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.DigitalInput
@@ -38,13 +39,16 @@ object HoodSubsystem : SubsystemBase() {
 	/** Pressed at lowest hood angle */
 	private val bottomLimitSwitch = DigitalInput(RobotMap.Hood.BOTTOM_LIMIT_CHANNEL)
 
-	// Switch is wired normally true, false when pressed
-	val isAtBottomLimit get() = !bottomLimitSwitch.get() || currentAngle < Constants.MIN_ANGLE
-	val isAtTopLimit get() = currentAngle > Constants.MAX_ANGLE
+	// Switch is wired normally false, true when pressed
+	val isAtBottomLimit get() = bottomLimitSwitch.get()
+	val isAtTopLimit get() = encoder.position > Constants.TOP_LIMIT_ENCODER_POSITION
 
 	var currentAngle = Rotation2d()
-		get() = Rotation2d.fromDegrees(encoder.position / GEAR_RATIO_ENCODER_TO_HOOD)
-		private set
+		get() = Rotation2d.fromDegrees(encoder.position * GEAR_RATIO_ENCODER_TO_HOOD)
+		private set(value) {
+			encoder.position = value.degrees * GEAR_RATIO_ENCODER_TO_HOOD
+			field = value
+		}
 
 	private var setpoint = Rotation2d()
 	private val error
@@ -81,8 +85,7 @@ object HoodSubsystem : SubsystemBase() {
 	}
 
 	fun setWithLimits(value: Double) {
-		if (isAtTopLimit || isAtBottomLimit
-		) { // Switches are wired normally true
+		if ((isAtTopLimit && value > 0.0) || (isAtBottomLimit && value < 0.0)) {
 			stopHood()
 		} else {
 			motor.set(ControlMode.PercentOutput, value)
@@ -90,12 +93,11 @@ object HoodSubsystem : SubsystemBase() {
 	}
 
 	fun zeroHood() {
-		currentAngle = 0.0.degrees
+		encoder.position = 0.0
 	}
 
 	override fun periodic() {
-		// Switch is wired normally true, false when pressed
-		if (!bottomLimitSwitch.get()) {
+		if (bottomLimitSwitch.get()) {
 			currentAngle = Constants.MIN_ANGLE
 		}
 	}

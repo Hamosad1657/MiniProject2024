@@ -17,9 +17,9 @@ object TurretConstants {
 	 */
 //	const val GEAR_RATIO_ENCODER_TO_TURRET = 20.0 / 151.0
 	const val GEAR_RATIO_ENCODER_TO_TURRET = (360 - 13) / 1900.986
-	val MIN_POSITION = -1900.986
+	const val MIN_POSITION = -1900.986
 
-	val MAX_POSITION = 0.0
+	const val MAX_POSITION = 0.0
 
 	/**
 	 * Minimum angle of the turret. This may be different from
