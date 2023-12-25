@@ -15,9 +15,10 @@ import frc.robot.subsystems.shooter.ShooterConstants as Constants
 
 object ShooterSubsystem : SubsystemBase() {
 	private val motor = HaTalonFX(RobotMap.Shooter.MOTOR_ID).apply {
-		inverted = false // TODO: verify positive output is shooting
+		inverted = true // Positive output should be shooting
 		configPIDGains(Constants.PID_GAINS)
 		setNeutralMode(NeutralMode.Coast)
+		configClosedloopRamp(0.5)
 	}
 
 	val ballsPerSec: Double get() = angularVelocity.rps / Constants.SHOOTER_BALLS_PER_ROTATION
@@ -36,7 +37,7 @@ object ShooterSubsystem : SubsystemBase() {
 			AngularVelocity.fromRpm(0.0),
 			ShooterConstants.MAX_VELOCITY
 		)
-		motor.set(ControlMode.Velocity, velocity.degPs)
+		motor.set(ControlMode.Velocity, 20000.0)
 	}
 
 	fun stopShooter() {
@@ -51,13 +52,10 @@ object ShooterSubsystem : SubsystemBase() {
 
 	override fun initSendable(builder: SendableBuilder) {
 		builder.setSmartDashboardType("ShooterSubsystem")
+		builder.addDoubleProperty("Encoder Velocity", { motor.selectedSensorVelocity }, null)
 		builder.addDoubleProperty("Balls per sec", { ballsPerSec }, null)
 		builder.addDoubleProperty("Deg per sec", { angularVelocity.degPs }, null)
 		builder.addDoubleProperty("Setpoint deg per sec", { setpoint.degPs }, null)
 		builder.addBooleanProperty("Within tolerance", ::withinTolerance, null)
-	}
-
-	init {
-		this.defaultCommand = run { getToVelocity(setpoint) }
 	}
 }

@@ -1,10 +1,10 @@
-package frc.robot.subsystems.conveyor
+package frc.robot.subsystems.loader
 
 import com.hamosad1657.lib.math.PIDGains
 
-object ConveyorConstants {
+object LoaderConstants {
 	val CONVEYOR_PID_GAINS = PIDGains(0.0, 0.0, 0.0)
-	val LOADER_PID_GAINS = PIDGains(0.0, 0.0, 0.0)
+	val MAGAZINE_PID_GAINS = PIDGains(0.0, 0.0, 0.0)
 
 	/**
 	 * 2.536 balls fit in the conveyor.
@@ -21,5 +21,5 @@ object ConveyorConstants {
 	 *
 	 * Multiply by this value to get motor rotations from loader balls.
 	 */
-	const val LOADER_BALLS_PER_MOTOR_ROTATION = 9.0 / 125.0
+	const val MAGAZINE_BALLS_PER_MOTOR_ROTATION = 9.0 / 125.0
 }

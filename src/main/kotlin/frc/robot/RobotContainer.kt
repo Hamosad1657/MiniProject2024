@@ -1,11 +1,14 @@
 package frc.robot
 
+import com.hamosad1657.lib.units.AngularVelocity
 import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
 import frc.robot.commands.*
 import frc.robot.subsystems.hood.HoodSubsystem
+import frc.robot.subsystems.loader.LoaderSubsystem
+import frc.robot.subsystems.shooter.ShooterSubsystem
 import frc.robot.subsystems.turret.TurretSubsystem
 
 object RobotContainer {
@@ -39,6 +42,11 @@ object RobotContainer {
 		commandControllerB.share().onTrue(InstantCommand({ TurretSubsystem.resetEncoderAngle() }))
 
 		commandControllerB.options().onTrue(InstantCommand({ HoodSubsystem.zeroHood() }))
+
+		commandControllerB.cross()
+			.toggleOnTrue(ShooterSubsystem.run { ShooterSubsystem.getToVelocity(AngularVelocity.fromRpm(0.0)) })
+
+		commandControllerB.povUp().toggleOnTrue(LoaderSubsystem.runOpenLoop())
 	}
 
 	private fun setDefaultCommands() {

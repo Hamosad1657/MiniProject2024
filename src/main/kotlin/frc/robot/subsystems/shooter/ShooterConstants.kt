@@ -5,7 +5,7 @@ import com.hamosad1657.lib.units.AngularVelocity
 import com.hamosad1657.lib.units.centimeters
 
 object ShooterConstants {
-	val PID_GAINS = PIDGains(0.0, 0.0, 0.0)
+	val PID_GAINS = PIDGains(0.045, 0.0, 20.0, kFF = 0.05)
 	val VELOCITY_TOLERANCE = AngularVelocity.fromFalconTicksPer100ms(0.0)
 
 	/**
