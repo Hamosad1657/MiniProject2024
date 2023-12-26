@@ -23,8 +23,8 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 
 	private val motor = HaTalonFX(RobotMap.Turret.MOTOR_ID).apply {
 		inverted = false // Positive output is CCW rotation
-		configForwardSoftLimitThreshold(Constants.MIN_POSITION * 4096)
-		configReverseSoftLimitThreshold(Constants.MAX_POSITION * 4096)
+		configForwardSoftLimitThreshold(Constants.MIN_POSITION)
+		configReverseSoftLimitThreshold(Constants.MAX_POSITION)
 		configForwardSoftLimitEnable(false)
 		configReverseSoftLimitEnable(false)
 
