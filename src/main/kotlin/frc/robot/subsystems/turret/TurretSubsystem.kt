@@ -1,7 +1,6 @@
 package frc.robot.subsystems.turret
 
-import com.ctre.phoenix.motorcontrol.ControlMode
-import com.ctre.phoenix.motorcontrol.NeutralMode
+import com.ctre.phoenix.motorcontrol.*
 import com.ctre.phoenix.sensors.WPI_CANCoder
 import com.hamosad1657.lib.math.clamp
 import com.hamosad1657.lib.math.wrap0to360
@@ -28,6 +27,9 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 		configReverseSoftLimitThreshold(Constants.MAX_POSITION * 4096)
 		configForwardSoftLimitEnable(false)
 		configReverseSoftLimitEnable(false)
+
+		configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed)
+		configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed)
 
 		configPIDGains(Constants.PID_GAINS)
 
