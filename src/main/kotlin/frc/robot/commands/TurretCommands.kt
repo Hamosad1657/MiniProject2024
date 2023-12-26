@@ -1,5 +1,6 @@
 package frc.robot.commands
 
+import com.ctre.phoenix.motorcontrol.ControlMode
 import com.hamosad1657.lib.commands.*
 import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.math.geometry.Pose2d
@@ -103,7 +104,7 @@ fun TurretSubsystem.openLoopTeleopCommand(
 ): Command {
 	return withName("openLoopTeleopCommand") {
 		run {
-			setWithLimits(cwRotationSupplier() - ccwRotationSupplier())
+			setWithLimits(ControlMode.PercentOutput, cwRotationSupplier() - ccwRotationSupplier())
 		} finallyDo {
 			stopTurret()
 		}

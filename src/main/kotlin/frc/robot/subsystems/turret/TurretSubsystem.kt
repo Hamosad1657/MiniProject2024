@@ -73,7 +73,7 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 			clamp(wrappedDesiredAngleDeg, Constants.MIN_ANGLE.degrees, Constants.MAX_ANGLE.degrees)
 
 		val setpointDeg = clampedDesiredAngleDeg * Constants.GEAR_RATIO_ENCODER_TO_TURRET
-		setSetpoint(setpointDeg)
+		setWithLimits(ControlMode.Position, setpointDeg)
 	}
 
 	fun guessTurnAngleFromTargetCorner(cornerX: Double) =
@@ -83,24 +83,33 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 		return abs(error.degrees) <= TurretConstants.TOLERANCE_DEGREES
 	}
 
-	fun setSetpoint(value: Double) {
-		this.setpoint
-		if (error.degrees > 0.0 && isAtCCWLimit ||
-			error.degrees < 0.0 && isAtCWLimit
-		) {
-			stopTurret()
-		} else {
-			motor.set(ControlMode.Position, value)
-		}
-	}
+	fun setWithLimits(controlMode: ControlMode, value: Double) {
+		when (controlMode) {
+			ControlMode.PercentOutput -> {
+				this.setpoint = value.degrees
 
-	fun setWithLimits(value: Double) {
-		if (value > 0.0 && isAtCCWLimit ||
-			value < 0.0 && isAtCWLimit
-		) {
-			stopTurret()
-		} else {
-			motor.set(value)
+				if (value > 0.0 && isAtCCWLimit ||
+					value < 0.0 && isAtCWLimit
+				) {
+					stopTurret()
+				} else {
+					motor.set(value)
+				}
+			}
+
+			ControlMode.Position -> {
+				if (error.degrees > 0.0 && isAtCCWLimit ||
+					error.degrees < 0.0 && isAtCWLimit
+				) {
+					stopTurret()
+				} else {
+					motor.set(ControlMode.Position, value)
+				}
+			}
+
+			else -> {
+				throw IllegalArgumentException()
+			}
 		}
 	}
 
