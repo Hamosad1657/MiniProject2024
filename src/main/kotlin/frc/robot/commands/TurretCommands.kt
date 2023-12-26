@@ -48,15 +48,15 @@ fun TurretSubsystem.fullTurnCommand(): Command =
  */
 fun TurretSubsystem.searchForTagCommand(tagID: Int): Command {
 	return withName("searchForTagCommand") {
-		(fullTurnCommand() andThen fullTurnCommand()) until { Vision.isSpecificTagDetected(tagID) }
+		(fullTurnCommand() andThen fullTurnCommand()) until { Vision.getTag(tagID) != null }
 	}
 }
 
-fun TurretSubsystem.searchForAnyTagCommand(): Command {
-	return withName("searchForAnyTagCommand") {
-		(fullTurnCommand() andThen fullTurnCommand()) until { Vision.isAnyTagDetected }
-	}
-}
+//fun TurretSubsystem.searchForAnyTagCommand(): Command {
+//	return withName("searchForAnyTagCommand") {
+//		(fullTurnCommand() andThen fullTurnCommand()) until { Vision.isAnyTagDetected }
+//	}
+//}
 
 fun TurretSubsystem.trackTargetCommand(trackedTargetSupplier: () -> PhotonTrackedTarget?): Command {
 	var currentTurnAngle: Rotation2d? = null

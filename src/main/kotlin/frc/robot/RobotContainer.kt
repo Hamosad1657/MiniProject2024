@@ -10,13 +10,12 @@ import frc.robot.subsystems.hood.HoodSubsystem
 import frc.robot.subsystems.loader.LoaderSubsystem
 import frc.robot.subsystems.shooter.ShooterSubsystem
 import frc.robot.subsystems.turret.TurretSubsystem
-import frc.robot.subsystems.vision.Vision
 
 object RobotContainer {
 	const val JOYSTICK_DEADBAND = 0.1
 
-	private val commandControllerA = CommandPS4Controller(RobotMap.DRIVER_A_CONTROLLER_PORT)
-	private val commandControllerB = CommandPS4Controller(RobotMap.DRIVER_B_CONTROLLER_PORT)
+	private val controllerA = CommandPS4Controller(RobotMap.DRIVER_A_CONTROLLER_PORT)
+	private val controllerB = CommandPS4Controller(RobotMap.DRIVER_B_CONTROLLER_PORT)
 
 	init {
 		configureBindings()
@@ -38,28 +37,30 @@ object RobotContainer {
 //		// Turn turret to search for tags on options button
 //		commandControllerB.options().onTrue(TurretSubsystem.searchForAnyTagCommand())
 
-		commandControllerB.triangle().onTrue(TurretSubsystem.getToAngleCommand(90.degrees))
+		controllerB.triangle().onTrue(TurretSubsystem.getToAngleCommand(90.degrees))
 
-		commandControllerB.share().onTrue(InstantCommand({ TurretSubsystem.resetEncoderAngle() }))
+		controllerB.share().onTrue(InstantCommand({ TurretSubsystem.zeroEncoderAngle() }))
 
-		commandControllerB.options().onTrue(InstantCommand({ HoodSubsystem.zeroHood() }))
+		controllerB.options().onTrue(InstantCommand({ HoodSubsystem.zeroHood() }))
 
-		commandControllerB.cross()
+		controllerB.cross()
 			.toggleOnTrue(ShooterSubsystem.run { ShooterSubsystem.getToVelocity(AngularVelocity.fromRpm(0.0)) })
 
-		commandControllerB.povUp().toggleOnTrue(LoaderSubsystem.runOpenLoop())
+		controllerB.povUp().toggleOnTrue(LoaderSubsystem.runOpenLoop())
 	}
 
 	private fun setDefaultCommands() {
 		// Temporarily commented out for testing
 		// TODO: Change turret default command back to aimTurretCommand when done testing
 		// TurretSubsystem.defaultCommand = TurretSubsystem.aimTurretCommand { SwerveSubsystem.pose }
-		TurretSubsystem.defaultCommand = TurretSubsystem.trackTargetCommand(Vision::currentBestTag)
+//		TurretSubsystem.defaultCommand = TurretSubsystem.trackTargetCommand(Vision::bestTag)
 
-		HoodSubsystem.defaultCommand = HoodSubsystem.teleopCommand { commandControllerB.leftY }
+		TurretSubsystem.defaultCommand =
+			TurretSubsystem.openLoopTeleopCommand({ controllerB.r2Axis * 0.1 }, { controllerB.l2Axis * 0.1 })
+		HoodSubsystem.defaultCommand = HoodSubsystem.teleopCommand { controllerB.leftY }
 	}
 
 	fun getAutonomousCommand(): Command? {
-		return TurretSubsystem.getToAngleCommand(90.degrees)
+		return null
 	}
 }

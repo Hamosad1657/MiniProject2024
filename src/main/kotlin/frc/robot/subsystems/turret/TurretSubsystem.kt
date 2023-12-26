@@ -6,6 +6,7 @@ import com.ctre.phoenix.sensors.WPI_CANCoder
 import com.hamosad1657.lib.math.clamp
 import com.hamosad1657.lib.math.wrap0to360
 import com.hamosad1657.lib.motors.HaTalonFX
+import com.hamosad1657.lib.units.degrees
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.DigitalInput
@@ -36,7 +37,7 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 
 	/** CCW positive, according to standard mathematical conventions (and WPILib). */
 	var currentAngle = Rotation2d()
-		get() = Rotation2d.fromDegrees((encoder.position / Constants.GEAR_RATIO_ENCODER_TO_TURRET) - 90)
+		get() = ((encoder.position / Constants.GEAR_RATIO_ENCODER_TO_TURRET) - 90).degrees
 		private set
 
 	private val CWLimitSwitch = DigitalInput(RobotMap.Turret.CW_LIMIT_CHANNEL)
@@ -129,7 +130,7 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 	}
 
 	// TODO: Remove resetAngle() when done testing with it
-	fun resetEncoderAngle() {
+	fun zeroEncoderAngle() {
 		encoder.position = 0.0
 	}
 }

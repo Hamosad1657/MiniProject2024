@@ -17,8 +17,6 @@ import kotlin.math.*
 val BOILER_LOCATION = Translation2d()
 
 data class HoodShooterState(val hoodAngle: Rotation2d, val angularVelocity: AngularVelocity) {
-
-
 	companion object {
 //		TODO(Hagar and Shaked) if possible make shooter velocity change minimal
 		/**

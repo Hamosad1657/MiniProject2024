@@ -6,8 +6,7 @@ import com.hamosad1657.lib.units.degrees
 object TurretConstants {
 	// -1900.986
 
-
-	val PID_GAINS = PIDGains(0.09, 0.0, 0.0)
+	val PID_GAINS = PIDGains(0.02, 0.0, 0.0)
 
 	const val TOLERANCE_DEGREES = 0.0
 
@@ -16,7 +15,6 @@ object TurretConstants {
 	 * Multiply by this value to get encoder rotations from turret rotations.
 	 */
 //	const val GEAR_RATIO_ENCODER_TO_TURRET = 20.0 / 151.0
-	const val GEAR_RATIO_ENCODER_TO_TURRET = (360 - 13) / 1900.986
 	const val MIN_POSITION = -1900.986
 
 	const val MAX_POSITION = 0.0
@@ -32,6 +30,8 @@ object TurretConstants {
 	 * what is measured by the CANCoder, due to the gear ratio.
 	 */
 	val MAX_ANGLE = (90).degrees
+
+	val GEAR_RATIO_ENCODER_TO_TURRET = (MAX_ANGLE - MIN_ANGLE).degrees / MAX_POSITION - MIN_POSITION
 
 	const val SCAN_FOR_TAGS_ROTATION_OUTPUT = 0.0
 
