@@ -6,9 +6,11 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
 import frc.robot.commands.*
+import frc.robot.commands.swerve.TeleopDriveCommand
 import frc.robot.subsystems.hood.HoodSubsystem
 import frc.robot.subsystems.loader.LoaderSubsystem
 import frc.robot.subsystems.shooter.ShooterSubsystem
+import frc.robot.subsystems.swerve.SwerveSubsystem
 import frc.robot.subsystems.turret.TurretSubsystem
 
 object RobotContainer {
@@ -20,6 +22,7 @@ object RobotContainer {
 	init {
 		configureBindings()
 		setDefaultCommands()
+		SwerveSubsystem.heading
 	}
 
 	private fun configureBindings() {
@@ -56,8 +59,19 @@ object RobotContainer {
 //		TurretSubsystem.defaultCommand = TurretSubsystem.trackTargetCommand(Vision::bestTag)
 
 		TurretSubsystem.defaultCommand =
-			TurretSubsystem.openLoopTeleopCommand({ controllerB.r2Axis * 0.1 }, { controllerB.l2Axis * 0.1 })
+			TurretSubsystem.openLoopTeleopCommand({ controllerB.r2Axis * 0.05 }, { controllerB.l2Axis * 0.05 })
+
 		HoodSubsystem.defaultCommand = HoodSubsystem.teleopCommand { controllerB.leftY }
+
+		SwerveSubsystem.defaultCommand = TeleopDriveCommand(
+			SwerveSubsystem,
+			vX = { -controllerA.leftY },
+			vY = { -controllerA.leftX },
+			omega = { controllerA.rightX },
+			isFieldRelative = { true },
+			isOpenLoop = false,
+			headingCorrection = false,
+		)
 	}
 
 	fun getAutonomousCommand(): Command? {

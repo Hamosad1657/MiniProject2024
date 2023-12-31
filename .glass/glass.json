@@ -1,0 +1,15 @@
+{
+  "NetworkTables": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Scheduler": "Scheduler",
+      "/SmartDashboard/Talon FX [4]": "Motor Controller",
+      "/SmartDashboard/navX-Sensor[1]": "Gyro"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "1657"
+  }
+}

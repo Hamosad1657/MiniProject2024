@@ -28,8 +28,8 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 		configForwardSoftLimitEnable(false)
 		configReverseSoftLimitEnable(false)
 
-		configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed)
-		configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed)
+		configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled)
+		configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled)
 
 		configPIDGains(Constants.PID_GAINS)
 
@@ -86,7 +86,6 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 	fun setWithLimits(controlMode: ControlMode, value: Double) {
 		when (controlMode) {
 			ControlMode.PercentOutput -> {
-				this.setpoint = value.degrees
 
 				if (value > 0.0 && isAtCCWLimit ||
 					value < 0.0 && isAtCWLimit
@@ -98,6 +97,7 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 			}
 
 			ControlMode.Position -> {
+				this.setpoint = value.degrees
 				if (error.degrees > 0.0 && isAtCCWLimit ||
 					error.degrees < 0.0 && isAtCWLimit
 				) {
@@ -131,6 +131,7 @@ object TurretSubsystem : SubsystemBase(), AutoCloseable {
 		builder.addBooleanProperty("Within Tolerance", ::withinTolerance, null)
 		builder.addBooleanProperty("CW limit", { isAtCWLimit }, null)
 		builder.addBooleanProperty("CCW limit", { isAtCCWLimit }, null)
+		SmartDashboard.putData(this.motor)
 	}
 
 	override fun close() {
