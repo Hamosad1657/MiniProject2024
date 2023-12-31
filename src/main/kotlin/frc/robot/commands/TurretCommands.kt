@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.mechanisms.BOILER_LOCATION
 import frc.robot.subsystems.turret.TurretSubsystem
-import frc.robot.subsystems.vision.Vision
 import org.photonvision.targeting.PhotonTrackedTarget
 import frc.robot.subsystems.turret.TurretConstants as Constants
 
@@ -47,11 +46,11 @@ fun TurretSubsystem.fullTurnCommand(): Command =
  * end if saw tag of specified ID for more than [Constants.TAG_DETECTION_TIME_SEC]
  * or if made two turns and didn't see the tag
  */
-fun TurretSubsystem.searchForTagCommand(tagID: Int): Command {
-	return withName("searchForTagCommand") {
-		(fullTurnCommand() andThen fullTurnCommand()) until { Vision.getTag(tagID) != null }
-	}
-}
+//fun TurretSubsystem.searchForTagCommand(tagID: Int): Command {
+//	return withName("searchForTagCommand") {
+//		(fullTurnCommand() andThen fullTurnCommand()) until { Vision.getTag(tagID) != null }
+//	}
+//}
 
 //fun TurretSubsystem.searchForAnyTagCommand(): Command {
 //	return withName("searchForAnyTagCommand") {
